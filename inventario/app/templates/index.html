@@ -7,44 +7,72 @@
     <style>
 
         .body {
-            background-color: #028dff;
+            background-color: #ffffff;
             width: 100%;
             height: 100vh;
         }
 
-        .parent {
+        .footer {
+            background-color: #ff0202;
+            width: 100%;
+            height: 10vh;
+        }
+
+
+.parent {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 8px;
+    height: 80vh;
 }
 
 .div1 {
-    grid-column: span 5 / span 5;
-    background-color: #ff0202;
+    background-color: aqua;
+    grid-column: span 2 / span 2;
 }
 
 .div2 {
-    grid-row: span 4 / span 4;
+    background-color: #1664ca;
     grid-row-start: 2;
-    background-color: #ff02c8;
 }
 
 .div3 {
-    grid-column: span 4 / span 4;
-    grid-row: span 4 / span 4;
+    background-color: #0fe008;
+
     grid-row-start: 2;
-    background-color: #20ff02;
 }
+.div4 {
+    background-color: #f4c542;
+    grid-row-start: 3;
+}
+
+
+
+.div5 {
+    background-color: #8a268d;
+
+    grid-row-start: 3;
+}
+
+
 
 </style>
 </head>
-<bod class="body">
+<body class="body">
+
 <div class="parent">
     <div class="div1">1</div>
     <div class="div2">2</div>
     <div class="div3">3</div>
+    <div class="div4">4</div>
+    <div class="div5">5</div>
 </div>
 
+<footer>
+    <div class="footer">
+        <p>Footer content here</p>
+    </div>
+</footer>
 </body>
 </html>
