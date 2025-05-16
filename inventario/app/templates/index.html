@@ -1,82 +1,33 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-
-        .body {
-            background-color: #ffffff;
-            width: 100%;
-            height: 100vh;
-        }
-
-
-
-.parent {
-    display: flex;
-    width: 100%;
-    height: 80vh;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-}
-
-.div1 {
-    background-color: aqua;
-    width: 90%;
-    height: 10%;
-}
-
-.divContainerOpciones{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    width: 100%;
-    height: 90%;
-}
-
-.div2 {
-    background-color: #1664ca;
-
-}
-
-.div3 {
-    background-color: #0fe008;
-
-
-}
-.div4 {
-    background-color: #f4c542;
-
-}
-
-
-
-.div5 {
-    background-color: #8a268d;
-
-
-}
-
-
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Botica Central Menu</title>
+    <link rel="icon" href="https://boticacentral.com/wp-content/uploads/2020/10/cropped-favicon-32x32.png" sizes="32x32"/>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
 </head>
+
 <body class="body">
-
-<div class="parent">
-    <div class="div1">1</div>
-    <div class="divContainerOpciones">
-        <div class="div2">2</div>
-        <div class="div3">3</div>
-        <div class="div4">4</div>
-        <div class="div5">5</div>
+    <nav class="nav">
+        <img src="/static/logo.png" alt="Logo" style="display: block; max-width: 50%; height:100%;">
+        <h1 style="color: #000000;">SISTEMA DE INVENTARIO </h1>
+    </nav>
+    <div class="parent">
+        <div class="divContainerOpciones">
+            <div class="div1">
+                <img src="static/img/user.png" alt="" height="50%" width="25%">
+                <button>
+                    <h2 style="color: #000000;">administrar empleados</h2>
+                </button>
+            </div>
+            <div class="div2">2</div>
+            <div class="div3">3</div>
+            <div class="div4">4</div>
+        </div>
     </div>
-</div>
-
 </body>
+
 </html>
