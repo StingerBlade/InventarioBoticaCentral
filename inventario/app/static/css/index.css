@@ -1,15 +1,15 @@
         /* Codigos de colores */
         .red {
-            color: #EC0B0B;
+            background-color: #EC0B0B;
         }
         .blue {
-            color: #2191FB;
+            background-color: #2191FB;
         }
         .white{
-            color: #FFFFFF;
+            background-color: #FFFFFF;
         }
         .green {
-            color: #1CD97E;
+            background-color:  #1CD97E;
         }
 
         
@@ -30,7 +30,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            background-color: crimson;
+            background-color: rgb(219, 253, 23);
         }
 
         .nav {
@@ -54,21 +54,21 @@
             height: 90%;
         }
 
-        .div1 {
-            width: 40%;
+        .divOpcion {
+            width: 39%;
             height: 40%;
             display: flex;
             justify-content: center;
             flex-direction: column;
             flex-wrap: wrap;
             align-items: center;
-            border-radius: 3px solid black;
-            border-radius: 5%;
+            border: 5px solid black;
+            border-radius: 10%;
             margin: 1px;
         }
 
         .div2 {
-            background-color: #2216ca;
+            
             width: 40%;
             height: 40%;
             display: flex;
@@ -79,7 +79,7 @@
         }
 
         .div3 {
-            background-color: #f442b9;
+
             width: 40%;
             height: 40%;
             display: flex;
@@ -90,7 +90,7 @@
         }
 
         .div4 {
-            background-color: #8a268d;
+            
             width: 40%;
             height: 40%;
             display: flex;
