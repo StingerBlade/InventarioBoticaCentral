@@ -12,20 +12,35 @@
 
 <body class="body">
     <nav class="nav">
-        <img src="/static/logo.png" alt="Logo" style="display: block; max-width: 50%; height:100%;">
+        <img src="{% static 'img/logo.png' %}" alt="Logo" style="display: block; max-width: 50%; height:100%;">
         <h1 style="color: #000000;">SISTEMA DE INVENTARIO </h1>
     </nav>
     <div class="parent">
         <div class="divContainerOpciones">
             <div class="div1">
-                <img src="static/img/user.png" alt="" height="50%" width="25%">
+                <img src="{% static 'img/user.png' %}" alt="" height="50%" width="25%">
                 <button>
                     <h2 style="color: #000000;">administrar empleados</h2>
                 </button>
             </div>
-            <div class="div2">2</div>
-            <div class="div3">3</div>
-            <div class="div4">4</div>
+            <div class="div2">
+                        <img src="{% static 'img/user.png' %}" alt="" height="50%" width="25%">
+                <button>
+                    <h2 style="color: #000000;">2</h2>
+                </button>
+            </div>
+            <div class="div3">
+                <img src="{% static 'img/user.png' %}" alt="" height="50%" width="25%">
+                <button>
+                    <h2 style="color: #000000;">3</h2>
+                </button>
+            </div>
+            <div class="div4">
+                <img src="{% static 'img/user.png' %}" alt="" height="50%" width="25%">
+                <button>
+                    <h2 style="color: #000000;">4</h2>
+                </button>
+            </div>
         </div>
     </div>
 </body>

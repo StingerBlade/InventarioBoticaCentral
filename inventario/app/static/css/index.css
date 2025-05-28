@@ -1,3 +1,18 @@
+        /* Codigos de colores */
+        .red {
+            color: #EC0B0B;
+        }
+        .blue {
+            color: #2191FB;
+        }
+        .white{
+            color: #FFFFFF;
+        }
+        .green {
+            color: #1CD97E;
+        }
+
+        
         .body {
             background-color: #ffffff;
             width: 100%;
@@ -40,7 +55,6 @@
         }
 
         .div1 {
-            background-color: #1664ca;
             width: 40%;
             height: 40%;
             display: flex;
@@ -54,7 +68,7 @@
         }
 
         .div2 {
-            background-color: #16ca61;
+            background-color: #2216ca;
             width: 40%;
             height: 40%;
             display: flex;
@@ -65,7 +79,7 @@
         }
 
         .div3 {
-            background-color: #f4c542;
+            background-color: #f442b9;
             width: 40%;
             height: 40%;
             display: flex;
