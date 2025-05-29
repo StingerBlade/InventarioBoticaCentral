@@ -1,0 +1,72 @@
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f7fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .contenedor-formulario {
+        background-color: white;
+        border: 2px solid #1a2d6d;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .contenedor-logo {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .logo {
+        width: 80px;
+        margin-bottom: 0.5rem;
+    }
+
+    .contenedor-logo h1 {
+        color: #1a2d6d;
+        font-size: 1.8rem;
+        margin: 0;
+    }
+
+    .grupo-entrada {
+        margin-bottom: 1.2rem;
+    }
+
+    .grupo-entrada label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #1a2d6d;
+        font-weight: bold;
+    }
+
+    .grupo-entrada input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .btn-form {
+        width: 100%;
+        background-color: #e30613;
+        color: white;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-form:hover {
+        background-color: #c00511;
+    }

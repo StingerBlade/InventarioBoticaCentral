@@ -1,11 +1,35 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login_register.css' %}" />
     <title>Login</title>
 </head>
 <body>
-    
+       <div class="contenedor-formulario">
+        <div class="contenedor-logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo" />
+            <h1>Login</h1>
+        </div>
+
+        <form method="POST">
+ <!-- AQUI va el csrf token -->
+            <div class="grupo-entrada">
+                <label for="usuario">Usuario:</label>
+                <input type="text" name="usuario" id="usuario" placeholder="admin123" required />
+            </div>
+
+            <div class="grupo-entrada">
+                <label for="contra">Contrasena:</label>
+                <input type="contra" name="contra" id="contra" placeholder="****" required />
+            </div>
+
+            <button type="submit" class="btn-form">Login</button>
+        </form>
+
+        
+    </div>
 </body>
 </html>
