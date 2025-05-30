@@ -1,0 +1,120 @@
+/* Paleta basada en el logo: azul, rojo, blanco */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f6f8;
+    color: #001f4d;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #001f4d;
+    color: white;
+    gap: 1rem;
+}
+
+.logo {
+    height: 50px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 1rem;
+    justify-content: center;
+    background-color: #e0e0e0;
+}
+
+.input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 150px;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn.buscar {
+    background-color: #0072ce;
+    color: white;
+}
+
+.btn.vincular {
+    background-color: #220bec;
+    color: white;
+}
+
+.btn.editar {
+    background-color: #2191fb;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn.eliminar {
+    background-color: #ec0b0b;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn.ver {
+    background-color: #1cd97e;
+    color: white;
+}
+
+.tabla {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #001f4d;
+    color: white;
+}
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.status.disponible {
+    background-color: #1cd97e;
+    color: white;
+}
+
+.status.prestado {
+    background-color: #f39c12;
+    color: white;
+}
+
+.status.baja {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.acciones {
+    display: flex;
+    gap: 5px;
+}
