@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,7 +10,7 @@
 <body>
     <header class="header">
         <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
-        <h1>Administrar Usuario</h1>
+        <h1>Administrar Usuario/Equipos</h1>
     </header>
 
     <section class="filtros">
@@ -29,14 +19,11 @@
         <input type="text" placeholder="Apellido 2" class="input">
         <select class="input">
             <option value="" disabled selected>Área</option>
-            <option value="opcion1">Compras</option>
-            <option value="opcion2">Comercial</option>
-            <option value="opcion3">Administrativo</option>
-            <option value="opcion4"></option>
-
+            <option value="Compras">Compras</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Administrativo">Administrativo</option>
         </select>
         <button class="btn buscar">Buscar</button>
-        
     </section>
 
     <section class="tabla">
@@ -63,6 +50,56 @@
                         <button class="btn eliminar">❌</button>
                         <button class="btn ver">👁️</button>
                         <button class="btn vincular">Vincular Equipo</button>
+                    </td>
+                </tr>
+                <!-- Más filas dinámicamente -->
+            </tbody>
+        </table>
+    </section>
+
+    <section class="tabla">
+        <h2>Equipos Prestados</h2>
+         <section class="filtros">
+        <input type="text" placeholder="Nombre Equipo" class="input">
+        <input type="text" placeholder="Número de Serie" class="input">
+        <select class="input">
+            <option value="" disabled selected>Sucursal</option>
+            <option value="Compras">Compras</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Administrativo">Administrativo</option>
+        </select>
+        <button class="btn buscar">Buscar</button>
+    </section>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Número de Serie</th>
+                    <th>Estado</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Observaciones</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>INDEMO001</td>
+                    <td>Laptop</td>
+                    <td>HP</td>
+                    <td>EliteBook 840</td>
+                    <td>SN123456</td>
+                    <td><span class="status prestado">Prestado</span></td>
+                    <td>2024-04-01</td>
+                    <td>Equipo en buen estado</td>
+                                        <td class="acciones">
+                        <button class="btn editar">✏️</button>
+                        <button class="btn eliminar">❌</button>
+                        <button class="btn ver">👁️</button>
                     </td>
                 </tr>
                 <!-- Más filas dinámicamente -->
