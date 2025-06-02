@@ -1,7 +1,6 @@
 from django.db import models
 
 # Create your models here.
-from django.db import models
 
 class Estado(models.Model):
     nombre_est = models.CharField(max_length=100)
@@ -66,3 +65,11 @@ class DispositivoMovil(models.Model):
     numero_celular = models.CharField(max_length=20)
     tipo_plan = models.CharField(max_length=10, choices=PLAN_CHOICES)
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+
+
+class Administrador(models.Model):
+    nombre = models.CharField(max_length=100)
+    passwd = models.CharField(max_length=255)  # Aquí se guarda el hash
+
+    def __str__(self):
+        return self.nombre
