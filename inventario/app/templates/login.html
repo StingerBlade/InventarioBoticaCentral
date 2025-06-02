@@ -15,7 +15,7 @@
         </div>
 
         <form method="POST">
- <!-- AQUI va el csrf token -->
+            {% csrf_token %}
             <div class="grupo-entrada">
                 <label for="usuario">Usuario:</label>
                 <input type="text" name="usuario" id="usuario" placeholder="admin123" required />
@@ -23,7 +23,7 @@
 
             <div class="grupo-entrada">
                 <label for="contra">Contrasena:</label>
-                <input type="contra" name="contra" id="contra" placeholder="****" required />
+                <input type="password" name="contra" id="contra" placeholder="****" required />
             </div>
 
             <button type="submit" class="btn-form">Login</button>
