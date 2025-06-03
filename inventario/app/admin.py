@@ -15,3 +15,10 @@ admin.site.register(Equipo)
 admin.site.register(Mantenimiento)
 admin.site.register(Prestamo)
 admin.site.register(DispositivoMovil)
+
+
+
+
+admin.site.site_header = "Inventario - BOTICA CENTRAL"
+admin.site.site_title = "Panel de Administración"
+admin.site.index_title = "Bienvenido al Sistema de Inventario"
