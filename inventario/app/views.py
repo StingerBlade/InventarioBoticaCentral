@@ -9,9 +9,9 @@ from django.contrib.auth.decorators import login_required
 
 def hello (request):
     return HttpResponse("Hello, world. You're at the app index.")
-@login_required(login_url='login_view') 
+
 def index(request):
-    return render(request, 'index.html')
+    return redirect('/admin/')
 
 def login_view(request):
     if request.method == 'POST':
