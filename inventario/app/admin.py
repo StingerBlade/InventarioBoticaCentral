@@ -3,7 +3,7 @@ from .models import (
     Estado, Municipio, Sucursal, RazonSocial, TipoEquipo, Empleado,
     Equipo, Mantenimiento, Prestamo, DispositivoMovil
 )
-from .models import TipoAlmacenamiento, Disponibilidad
+from .models import TipoAlmacenamiento, Disponibilidad, Departamento
 
 admin.site.register(Estado)
 admin.site.register(Municipio)
@@ -18,7 +18,7 @@ admin.site.register(DispositivoMovil)
 admin.site.register(TipoAlmacenamiento)
 admin.site.register(Disponibilidad)
 
-
+admin.site.register(Departamento)
 
 
 admin.site.site_header = "Inventario - BOTICA CENTRAL"

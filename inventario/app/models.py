@@ -4,12 +4,20 @@ from django.core.exceptions import ValidationError
 class Estado(models.Model):
     nombre_est = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name = "Estado"
+        verbose_name_plural = "Estados"
+
     def __str__(self):
         return self.nombre_est
 
 class Municipio(models.Model):
     nombre_mun = models.CharField(max_length=100)
     fk_estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Municipio"
+        verbose_name_plural = "Municipios"
 
     def __str__(self):
         return self.nombre_mun
@@ -18,17 +26,39 @@ class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
     fk_municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name = "Sucursal"
+        verbose_name_plural = "Sucursales"
+
     def __str__(self):
         return self.nombre_suc
 
+class Departamento(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Departamento"
+        verbose_name_plural = "Departamentos"
+
+    def __str__(self):
+        return self.nombre
+
 class RazonSocial(models.Model):
     razon = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Razón Social"
+        verbose_name_plural = "Razones Sociales"
 
     def __str__(self):
         return self.razon
 
 class TipoEquipo(models.Model):
     nombre_tipo_equipo = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Tipo de Equipo"
+        verbose_name_plural = "Tipos de Equipo"
 
     def __str__(self):
         return self.nombre_tipo_equipo
@@ -56,13 +86,19 @@ class Disponibilidad(models.Model):
 class Empleado(models.Model):
     nombre_empleado = models.CharField(max_length=100)
     correo = models.EmailField(null=True, blank=True)
-    departamento = models.CharField(max_length=100, null=True, blank=True)
+    fk_sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
+    fk_departamento = models.ForeignKey(Departamento, on_delete=models.SET_NULL, null=True)
     puesto = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Empleado"
+        verbose_name_plural = "Empleados"
 
     def __str__(self):
         return self.nombre_empleado
 
 class Equipo(models.Model):
+    nombre = models.CharField(max_length=100, blank=True)
     tipo = models.ForeignKey(TipoEquipo, on_delete=models.CASCADE)
     marca = models.CharField(max_length=50, null=True, blank=True)
     modelo = models.CharField(max_length=50, null=True, blank=True)
@@ -71,13 +107,17 @@ class Equipo(models.Model):
     fk_sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
     tipo_almacenamiento = models.ForeignKey(TipoAlmacenamiento, on_delete=models.SET_NULL, null=True)
-    capacidad_almacenamiento = models.IntegerField(null=True, blank=True)
-    ram = models.IntegerField(null=True, blank=True)
+    capacidad_almacenamiento = models.IntegerField("Capacidad de almacenamiento (GB)", null=True, blank=True)
+    ram = models.IntegerField("Memoria RAM (GB)", null=True, blank=True)
     procesador = models.CharField(max_length=100, null=True, blank=True)
     disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        verbose_name = "Equipo"
+        verbose_name_plural = "Equipos"
+
     def __str__(self):
-        return f"{self.tipo} - {self.marca} {self.modelo}"
+        return f"{self.nombre} - {self.tipo} - {self.marca} {self.modelo}"
 
 class Mantenimiento(models.Model):
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
@@ -86,6 +126,10 @@ class Mantenimiento(models.Model):
     solucion = models.CharField(max_length=255)
     tecnico = models.CharField(max_length=100)
     estatus = models.CharField(max_length=50, default='Pendiente')
+
+    class Meta:
+        verbose_name = "Mantenimiento"
+        verbose_name_plural = "Mantenimientos"
 
     def __str__(self):
         return f"Mantenimiento de {self.fk_equipo} en {self.fecha}"
@@ -98,14 +142,17 @@ class Prestamo(models.Model):
     observaciones = models.TextField(null=True, blank=True)
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        verbose_name = "Préstamo"
+        verbose_name_plural = "Préstamos"
+
     def clean(self):
         if self.fk_equipo.disponibilidad.nombre != 'Disponible':
             raise ValidationError("Este equipo no está disponible para préstamo.")
 
     def save(self, *args, **kwargs):
-        self.full_clean()  # Llama a clean()
+        self.full_clean()
         super().save(*args, **kwargs)
-        # Cambiar disponibilidad del equipo
         en_prestamo = Disponibilidad.objects.get(nombre='En préstamo')
         self.fk_equipo.disponibilidad = en_prestamo
         self.fk_equipo.save()
@@ -124,6 +171,10 @@ class DispositivoMovil(models.Model):
     numero_celular = models.CharField(max_length=20)
     tipo_plan = models.CharField(max_length=10, choices=PLAN_CHOICES)
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Dispositivo Móvil"
+        verbose_name_plural = "Dispositivos Móviles"
 
     def __str__(self):
         return f"{self.marca} {self.modelo} - {self.numero_celular}"
