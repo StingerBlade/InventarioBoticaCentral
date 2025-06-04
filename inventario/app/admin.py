@@ -3,7 +3,7 @@ from .models import (
     Estado, Municipio, Sucursal, RazonSocial, TipoEquipo, Empleado,
     Equipo, Mantenimiento, Prestamo, DispositivoMovil
 )
-
+from .models import TipoAlmacenamiento, Disponibilidad
 
 admin.site.register(Estado)
 admin.site.register(Municipio)
@@ -15,6 +15,8 @@ admin.site.register(Equipo)
 admin.site.register(Mantenimiento)
 admin.site.register(Prestamo)
 admin.site.register(DispositivoMovil)
+admin.site.register(TipoAlmacenamiento)
+admin.site.register(Disponibilidad)
 
 
 
@@ -22,3 +24,4 @@ admin.site.register(DispositivoMovil)
 admin.site.site_header = "Inventario - BOTICA CENTRAL"
 admin.site.site_title = "Panel de Administración"
 admin.site.index_title = "Bienvenido al Sistema de Inventario"
+

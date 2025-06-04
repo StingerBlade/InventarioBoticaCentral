@@ -1,6 +1,5 @@
 from django.db import models
-
-# Create your models here.
+from django.core.exceptions import ValidationError
 
 class Estado(models.Model):
     nombre_est = models.CharField(max_length=100)
@@ -13,7 +12,7 @@ class Municipio(models.Model):
     fk_estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.nombre_mun} ({self.fk_estado})"
+        return self.nombre_mun
 
 class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
@@ -34,6 +33,26 @@ class TipoEquipo(models.Model):
     def __str__(self):
         return self.nombre_tipo_equipo
 
+class TipoAlmacenamiento(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Tipo de Almacenamiento"
+        verbose_name_plural = "Tipos de Almacenamiento"
+
+    def __str__(self):
+        return self.nombre
+
+class Disponibilidad(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Estado de Disponibilidad"
+        verbose_name_plural = "Estados de Disponibilidad"
+
+    def __str__(self):
+        return self.nombre
+
 class Empleado(models.Model):
     nombre_empleado = models.CharField(max_length=100)
     correo = models.EmailField(null=True, blank=True)
@@ -48,16 +67,17 @@ class Equipo(models.Model):
     marca = models.CharField(max_length=50, null=True, blank=True)
     modelo = models.CharField(max_length=50, null=True, blank=True)
     numero_serie = models.CharField(max_length=100, null=True, blank=True)
-    estado = models.CharField(max_length=20, default='Disponible')
     descripcion = models.TextField(null=True, blank=True)
     fk_sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
-    almacenamiento = models.IntegerField(null=True, blank=True)
+    fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
+    tipo_almacenamiento = models.ForeignKey(TipoAlmacenamiento, on_delete=models.SET_NULL, null=True)
+    capacidad_almacenamiento = models.IntegerField(null=True, blank=True)
     ram = models.IntegerField(null=True, blank=True)
     procesador = models.CharField(max_length=100, null=True, blank=True)
-    fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
+    disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"{self.tipo} - {self.marca} {self.modelo} ({self.numero_serie})"
+        return f"{self.tipo} - {self.marca} {self.modelo}"
 
 class Mantenimiento(models.Model):
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
@@ -68,7 +88,7 @@ class Mantenimiento(models.Model):
     estatus = models.CharField(max_length=50, default='Pendiente')
 
     def __str__(self):
-        return f"Mantenimiento de {self.fk_equipo} el {self.fecha}"
+        return f"Mantenimiento de {self.fk_equipo} en {self.fecha}"
 
 class Prestamo(models.Model):
     fk_empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
@@ -78,12 +98,24 @@ class Prestamo(models.Model):
     observaciones = models.TextField(null=True, blank=True)
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
 
+    def clean(self):
+        if self.fk_equipo.disponibilidad.nombre != 'Disponible':
+            raise ValidationError("Este equipo no está disponible para préstamo.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Llama a clean()
+        super().save(*args, **kwargs)
+        # Cambiar disponibilidad del equipo
+        en_prestamo = Disponibilidad.objects.get(nombre='En préstamo')
+        self.fk_equipo.disponibilidad = en_prestamo
+        self.fk_equipo.save()
+
     def __str__(self):
         return f"Préstamo de {self.fk_equipo} a {self.fk_empleado}"
 
 class DispositivoMovil(models.Model):
     PLAN_CHOICES = [
-        ('Datos', 'Datos'),
+        ('Plan', 'Plan'),
         ('Prepago', 'Prepago'),
     ]
     imei = models.CharField(max_length=20)
@@ -94,4 +126,4 @@ class DispositivoMovil(models.Model):
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.marca} {self.modelo} ({self.numero_celular})"
+        return f"{self.marca} {self.modelo} - {self.numero_celular}"
