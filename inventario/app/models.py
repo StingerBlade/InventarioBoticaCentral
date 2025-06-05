@@ -45,7 +45,10 @@ class Departamento(models.Model):
 
 class RazonSocial(models.Model):
     razon = models.CharField(max_length=100)
-
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+    direccion = models.CharField(max_length=255, null=True, blank=True)
+    telefono = models.CharField(max_length=15, null=True, blank=True)
+    correo = models.EmailField(null=True, blank=True)
     class Meta:
         verbose_name = "Razón Social"
         verbose_name_plural = "Razones Sociales"
@@ -140,7 +143,6 @@ class Prestamo(models.Model):
     fecha_prestamo = models.DateField(auto_now_add=True)
     fecha_devolucion = models.DateField(null=True, blank=True)
     observaciones = models.TextField(null=True, blank=True)
-    fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Préstamo"
