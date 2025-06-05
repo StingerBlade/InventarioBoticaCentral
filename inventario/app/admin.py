@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
-    Prestamo, DispositivoMovil
+    Prestamo, DispositivoMovil, Tipo_Sucursal
 )
 
 @admin.register(Empleado)
@@ -18,6 +18,12 @@ class EquipoAdmin(admin.ModelAdmin):
     list_filter = ('disponibilidad', 'tipo', 'marca', 'fk_sucursal')
     ordering = ('nombre',)
 
+@admin.register(Sucursal)
+class SucursalAdmin(admin.ModelAdmin):
+    search_fields = ('nombre_suc',)
+    ordering = ('nombre_suc',)
+    list_filter = ('fk_municipio__nombre_mun', 'fk_tipo_sucursal')
+    
 @admin.register(Prestamo)
 class PrestamoAdmin(admin.ModelAdmin):
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_prestamo', 'fecha_devolucion')
@@ -27,11 +33,6 @@ class PrestamoAdmin(admin.ModelAdmin):
     )
     list_filter = ('fk_equipo__tipo', 'fk_equipo__marca', 'fk_equipo__fk_sucursal')
 
-@admin.register(Sucursal)
-class SucursalAdmin(admin.ModelAdmin):
-    list_display = ('nombre_suc', 'fk_municipio')
-    search_fields = ('nombre_suc',)
-    ordering = ('nombre_suc',)
 
 @admin.register(Municipio)
 class MunicipioAdmin(admin.ModelAdmin):
@@ -53,6 +54,13 @@ class MantenimientoAdmin(admin.ModelAdmin):
     list_filter = ('estatus',)
     ordering = ('fecha',)
     
+
+@admin.register(Tipo_Sucursal)
+class TipoSucursalAdmin(admin.ModelAdmin):
+    list_display = ('nombre_tipo_sucursal',)
+    search_fields = ('nombre_tipo_sucursal',)
+    ordering = ('nombre_tipo_sucursal',)
+
 admin.site.register(Departamento)
 admin.site.register(RazonSocial)
 admin.site.register(TipoEquipo)

@@ -25,7 +25,7 @@ class Municipio(models.Model):
 class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
     fk_municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
-
+    fk_tipo_sucursal = models.ForeignKey('Tipo_Sucursal', on_delete=models.SET_NULL, null=True, blank=True)
     class Meta:
         verbose_name = "Sucursal"
         verbose_name_plural = "Sucursales"
@@ -115,6 +115,7 @@ class Equipo(models.Model):
     procesador = models.CharField(max_length=100, null=True, blank=True)
     disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
 
+
     class Meta:
         verbose_name = "Equipo"
         verbose_name_plural = "Equipos"
@@ -180,3 +181,14 @@ class DispositivoMovil(models.Model):
 
     def __str__(self):
         return f"{self.marca} {self.modelo} - {self.numero_celular}"
+
+
+class Tipo_Sucursal(models.Model):
+    nombre_tipo_sucursal = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Tipo de Sucursal"
+        verbose_name_plural = "Tipos de Sucursal"
+
+    def __str__(self):
+        return self.nombre_tipo_sucursal
