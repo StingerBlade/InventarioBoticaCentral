@@ -15,7 +15,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
 class EquipoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
-    list_filter = ('disponibilidad', 'tipo', 'marca', 'fk_sucursal')
+    list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
 
 @admin.register(Sucursal)
@@ -23,7 +23,7 @@ class SucursalAdmin(admin.ModelAdmin):
     search_fields = ('nombre_suc',)
     ordering = ('nombre_suc',)
     list_filter = ('fk_municipio__nombre_mun', 'fk_tipo_sucursal')
-    
+
 @admin.register(Prestamo)
 class PrestamoAdmin(admin.ModelAdmin):
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_prestamo', 'fecha_devolucion')
@@ -53,7 +53,7 @@ class MantenimientoAdmin(admin.ModelAdmin):
     search_fields = ('fk_equipo__nombre', 'tecnico', 'estatus')
     list_filter = ('estatus',)
     ordering = ('fecha',)
-    
+
 
 @admin.register(Tipo_Sucursal)
 class TipoSucursalAdmin(admin.ModelAdmin):

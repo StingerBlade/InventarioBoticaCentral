@@ -21,11 +21,24 @@ class Municipio(models.Model):
 
     def __str__(self):
         return self.nombre_mun
+class RazonSocial(models.Model):
+    razon = models.CharField(max_length=100)
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+    direccion = models.CharField(max_length=255, null=True, blank=True)
+    telefono = models.CharField(max_length=15, null=True, blank=True)
+    correo = models.EmailField(null=True, blank=True)
+    class Meta:
+        verbose_name = "Razón Social"
+        verbose_name_plural = "Razones Sociales"
 
+    def __str__(self):
+        return self.razon
+    
 class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
     fk_municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
     fk_tipo_sucursal = models.ForeignKey('Tipo_Sucursal', on_delete=models.SET_NULL, null=True, blank=True)
+    fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True)
     class Meta:
         verbose_name = "Sucursal"
         verbose_name_plural = "Sucursales"
@@ -43,18 +56,7 @@ class Departamento(models.Model):
     def __str__(self):
         return self.nombre
 
-class RazonSocial(models.Model):
-    razon = models.CharField(max_length=100)
-    rfc = models.CharField(max_length=13, null=True, blank=True)
-    direccion = models.CharField(max_length=255, null=True, blank=True)
-    telefono = models.CharField(max_length=15, null=True, blank=True)
-    correo = models.EmailField(null=True, blank=True)
-    class Meta:
-        verbose_name = "Razón Social"
-        verbose_name_plural = "Razones Sociales"
 
-    def __str__(self):
-        return self.razon
 
 class TipoEquipo(models.Model):
     nombre_tipo_equipo = models.CharField(max_length=50)
@@ -102,6 +104,7 @@ class Empleado(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100, blank=True)
+    fecha_de_alta = models.DateField(null=True, blank=True)
     tipo = models.ForeignKey(TipoEquipo, on_delete=models.CASCADE)
     marca = models.CharField(max_length=50, null=True, blank=True)
     modelo = models.CharField(max_length=50, null=True, blank=True)
@@ -162,6 +165,38 @@ class Prestamo(models.Model):
 
     def __str__(self):
         return f"Préstamo de {self.fk_equipo} a {self.fk_empleado}"
+
+class Asignacion(models.Model):
+    fk_empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+    fecha_asignacion = models.DateField(auto_now_add=True)
+    fecha_devolucion = models.DateField(null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Asignacion"
+        verbose_name_plural = "Asignaciones"
+
+    def clean(self):
+        if self.fk_equipo.disponibilidad.nombre != 'Disponible':
+            raise ValidationError("Este equipo no está disponible para Asignacion.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+        asignado = Disponibilidad.objects.get(nombre='Asignado')
+        self.fk_equipo.disponibilidad = asignado
+        self.fk_equipo.save()
+
+    def __str__(self):
+        return f"Asignacion de {self.fk_equipo} a {self.fk_empleado}"
+
+
+
+
+
+
+
 
 class DispositivoMovil(models.Model):
     PLAN_CHOICES = [
