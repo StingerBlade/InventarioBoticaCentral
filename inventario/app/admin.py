@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
-    Prestamo, DispositivoMovil, Tipo_Sucursal
+    Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
 
 @admin.register(Empleado)
@@ -22,7 +22,7 @@ class EquipoAdmin(admin.ModelAdmin):
 class SucursalAdmin(admin.ModelAdmin):
     search_fields = ('nombre_suc',)
     ordering = ('nombre_suc',)
-    list_filter = ('fk_municipio__nombre_mun', 'fk_tipo_sucursal')
+    list_filter = ('fk_municipio__nombre_mun', 'fk_tipo_sucursal','fk_razon_social')
 
 @admin.register(Prestamo)
 class PrestamoAdmin(admin.ModelAdmin):
@@ -31,7 +31,16 @@ class PrestamoAdmin(admin.ModelAdmin):
         'fk_equipo__nombre', 'fk_equipo__marca', 'fk_equipo__modelo',
         'fk_empleado__nombre_empleado', 'fk_razon_social__razon'
     )
-    list_filter = ('fk_equipo__tipo', 'fk_equipo__marca', 'fk_equipo__fk_sucursal')
+    list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
+
+@admin.register(Asignacion)
+class AsignacionAdmin(admin.ModelAdmin):
+    list_display = ('fk_equipo', 'fk_empleado', 'fecha_asignacion', 'fecha_devolucion')
+    search_fields = (
+        'fk_equipo__nombre', 'fk_equipo__marca', 'fk_equipo__modelo',
+        'fk_empleado__nombre_empleado', 'fk_razon_social__razon'
+    )
+    list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
 
 
 @admin.register(Municipio)
