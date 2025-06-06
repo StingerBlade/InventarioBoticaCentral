@@ -13,7 +13,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
 
 @admin.register(Equipo)
 class EquipoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad')
+    list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
@@ -58,10 +58,15 @@ class EstadoAdmin(admin.ModelAdmin):
 
 @admin.register(Mantenimiento)
 class MantenimientoAdmin(admin.ModelAdmin):
-    list_display = ('fk_equipo', 'fecha', 'tecnico', 'estatus')
-    search_fields = ('fk_equipo__nombre', 'tecnico', 'estatus')
-    list_filter = ('estatus',)
+    list_display = ('fk_equipo', 'fecha', 'tecnico', 'estatus', 'tipo_mantenimiento', 'tipo_general')
+    search_fields = ('fk_equipo__nombre', 'tecnico', 'estatus', 'tipo_mantenimiento__nombre')
+    list_filter = ('estatus', 'tipo_mantenimiento__padre__padre__nombre')  # para filtrar por Preventivo/Correctivo
     ordering = ('fecha',)
+
+    def tipo_general(self, obj):
+        return obj.tipo_general
+    tipo_general.short_description = 'Tipo General'
+
 
 
 @admin.register(Tipo_Sucursal)
