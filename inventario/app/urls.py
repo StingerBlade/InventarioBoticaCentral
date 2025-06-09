@@ -7,4 +7,5 @@ urlpatterns = [
     path('login_view/', views.login_view, name='login_view'), # Ruta para la página de inicio de sesión
     path('register/', views.register, name='register'),# Ruta para la página de registro
     path ('administracion/', views.administracion, name='administracion'), # Ruta para la página de administración
+     path('reporte/equipos/excel/', views.exportar_equipos_excel, name='exportar_excel'),
 ]

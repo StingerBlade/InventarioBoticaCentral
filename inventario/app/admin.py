@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ExportMixin
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
@@ -12,7 +13,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_filter = ('fk_departamento', 'fk_sucursal')
 
 @admin.register(Equipo)
-class EquipoAdmin(admin.ModelAdmin):
+class EquipoAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
