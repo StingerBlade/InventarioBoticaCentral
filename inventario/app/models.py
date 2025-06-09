@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -104,7 +105,8 @@ class Empleado(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100, blank=True)
-    fecha_de_alta = models.DateField(null=True, blank=True)
+    fecha_de_adquisicion = models.DateField(null=True, blank=True, verbose_name="Fecha de Adquisición")
+    fecha_de_alta = models.DateField(verbose_name="Fecha de Alta", default=timezone.now)
     tipo = models.ForeignKey(TipoEquipo, on_delete=models.CASCADE)
     marca = models.CharField(max_length=50, null=True, blank=True)
     modelo = models.CharField(max_length=50, null=True, blank=True)
@@ -188,9 +190,23 @@ class Prestamo(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-        en_prestamo = Disponibilidad.objects.get(nombre='En préstamo')
-        self.fk_equipo.disponibilidad = en_prestamo
+        
+        if self.fecha_devolucion:  # si se devolvió
+            disponible = Disponibilidad.objects.get(nombre='Disponible')
+            if self.fk_equipo.disponibilidad != disponible:
+                self.fk_equipo.disponibilidad = disponible
+                self.fk_equipo.save()
+        else:  # si no se devolvió, está en préstamo
+            en_prestamo = Disponibilidad.objects.get(nombre='En préstamo')
+            if self.fk_equipo.disponibilidad != en_prestamo:
+                self.fk_equipo.disponibilidad = en_prestamo
+                self.fk_equipo.save()
+
+    def delete(self, *args, **kwargs):
+        disponible = Disponibilidad.objects.get(nombre='Disponible')
+        self.fk_equipo.disponibilidad = disponible
         self.fk_equipo.save()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Préstamo de {self.fk_equipo} a {self.fk_empleado}"
@@ -207,15 +223,37 @@ class Asignacion(models.Model):
         verbose_name_plural = "Asignaciones"
 
     def clean(self):
-        if self.fk_equipo.disponibilidad.nombre != 'Disponible':
-            raise ValidationError("Este equipo no está disponible para asignarse, ya esta asignado alguien mas.")
+    # Busca asignaciones activas (sin fecha_devolucion) para este equipo
+        asignaciones_activas = Asignacion.objects.filter(
+            fk_equipo=self.fk_equipo,
+            fecha_devolucion__isnull=True
+        )
+        if self.pk:
+            # Excluir esta misma instancia cuando actualices
+            asignaciones_activas = asignaciones_activas.exclude(pk=self.pk)
 
+        if asignaciones_activas.exists():
+            raise ValidationError("Este equipo no está disponible para asignarse, ya está asignado alguien más.")
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-        asignado = Disponibilidad.objects.get(nombre='Asignado')
-        self.fk_equipo.disponibilidad = asignado
+        
+        if self.fecha_devolucion:  # si se devolvió
+            disponible = Disponibilidad.objects.get(nombre='Disponible')
+            if self.fk_equipo.disponibilidad != disponible:
+                self.fk_equipo.disponibilidad = disponible
+                self.fk_equipo.save()
+        else:  # si no se devolvió, está asignado
+            asignado = Disponibilidad.objects.get(nombre='Asignado')
+            if self.fk_equipo.disponibilidad != asignado:
+                self.fk_equipo.disponibilidad = asignado
+                self.fk_equipo.save()
+
+    def delete(self, *args, **kwargs):
+        disponible = Disponibilidad.objects.get(nombre='Disponible')
+        self.fk_equipo.disponibilidad = disponible
         self.fk_equipo.save()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Asignacion de {self.fk_equipo} a {self.fk_empleado}"
