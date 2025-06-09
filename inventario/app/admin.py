@@ -29,7 +29,7 @@ class PrestamoAdmin(admin.ModelAdmin):
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_prestamo', 'fecha_devolucion')
     search_fields = (
         'fk_equipo__nombre', 'fk_equipo__marca', 'fk_equipo__modelo',
-        'fk_empleado__nombre_empleado', 'fk_razon_social__razon'
+        'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
 
@@ -38,7 +38,7 @@ class AsignacionAdmin(admin.ModelAdmin):
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_asignacion', 'fecha_devolucion')
     search_fields = (
         'fk_equipo__nombre', 'fk_equipo__marca', 'fk_equipo__modelo',
-        'fk_empleado__nombre_empleado', 'fk_razon_social__razon'
+        'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
 

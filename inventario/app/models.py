@@ -184,8 +184,17 @@ class Prestamo(models.Model):
         verbose_name_plural = "Préstamos"
 
     def clean(self):
-        if self.fk_equipo.disponibilidad.nombre != 'Disponible':
-            raise ValidationError("Este equipo no está disponible para préstamo.")
+    # Busca préstamos activos (sin fecha_devolucion) para este equipo
+        prestamos_activas = Prestamo.objects.filter(
+            fk_equipo=self.fk_equipo,
+            fecha_devolucion__isnull=True
+        )
+        if self.pk:
+            # Excluir esta misma instancia cuando actualices
+            prestamos_activas = prestamos_activas.exclude(pk=self.pk)
+
+        if prestamos_activas.exists():
+            raise ValidationError("Este equipo no está disponible para préstamo, ya está prestado a alguien más.")
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -264,7 +273,6 @@ class DispositivoMovil(models.Model):
         ('Prepago', 'Prepago'),
     ]
     imei = models.CharField(max_length=20)
-    modelo = models.CharField(max_length=50)
     numero_celular = models.CharField(max_length=20)
     tipo_plan = models.CharField(max_length=10, choices=PLAN_CHOICES)
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo")
@@ -274,7 +282,7 @@ class DispositivoMovil(models.Model):
         verbose_name_plural = "Dispositivos Móviles"
 
     def __str__(self):
-        return f"{self.marca} {self.modelo} - {self.numero_celular}"
+        return f"{self.numero_celular}"
 
 
 class Tipo_Sucursal(models.Model):
