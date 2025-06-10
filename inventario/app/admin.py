@@ -5,9 +5,12 @@ from .models import (
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
     Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
-
-class EmpleadoInline(admin.TabularInline):
+class PrestamoInline(admin.TabularInline):
     model = Prestamo
+    extra = 1
+
+class AsignacionInline(admin.TabularInline):
+    model = Asignacion
     extra = 1
 
 @admin.register(Empleado)
@@ -16,7 +19,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
     search_fields = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento__nombre')
     list_filter = ('fk_departamento', 'fk_sucursal')
     ordering = ('nombre_empleado',)
-    inlines = [EmpleadoInline]
+    inlines = [ AsignacionInline, PrestamoInline]
 
 class MantenimientoInline(admin.TabularInline):
     model = Mantenimiento
@@ -52,6 +55,7 @@ class SucursalAdmin(admin.ModelAdmin):
     ordering = ('nombre_suc',)
     list_filter = ('fk_municipio__nombre_mun', 'fk_tipo_sucursal','fk_razon_social')
 
+
 @admin.register(Prestamo)
 class PrestamoAdmin(admin.ModelAdmin):
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_prestamo', 'fecha_devolucion')
@@ -60,6 +64,7 @@ class PrestamoAdmin(admin.ModelAdmin):
         'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
+    
 
 @admin.register(Asignacion)
 class AsignacionAdmin(admin.ModelAdmin):
