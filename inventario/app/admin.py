@@ -6,11 +6,17 @@ from .models import (
     Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
 
+class EmpleadoInline(admin.TabularInline):
+    model = Prestamo
+    extra = 1
+
 @admin.register(Empleado)
 class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento', 'fk_sucursal')
     search_fields = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento__nombre')
     list_filter = ('fk_departamento', 'fk_sucursal')
+    ordering = ('nombre_empleado',)
+    inlines = [EmpleadoInline]
 
 class MantenimientoInline(admin.TabularInline):
     model = Mantenimiento
