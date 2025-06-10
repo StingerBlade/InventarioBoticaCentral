@@ -12,12 +12,33 @@ class EmpleadoAdmin(admin.ModelAdmin):
     search_fields = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento__nombre')
     list_filter = ('fk_departamento', 'fk_sucursal')
 
+class MantenimientoInline(admin.TabularInline):
+    model = Mantenimiento
+    extra = 1
+
 @admin.register(Equipo)
 class EquipoAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
+    inlines = [MantenimientoInline]
+    fieldsets = (
+        ('Datos generales', {
+            'fields': ('nombre', 'tipo', 'marca', 'modelo', 'numero_serie')
+        }),
+        ('Especificaciones técnicas', {
+            'fields': ('ram', 'procesador', 'tipo_almacenamiento', 'capacidad_almacenamiento', 'version_windows')
+        }),
+        ('Ubicación y estado', {
+            'fields': ('fk_sucursal', 'fk_razon_social', 'disponibilidad')
+        }),
+        ('Otros', {
+            'fields': ('licencia_office', 'descripcion')
+        }),
+    )
+
+
 
 @admin.register(Sucursal)
 class SucursalAdmin(admin.ModelAdmin):
@@ -56,6 +77,8 @@ class EstadoAdmin(admin.ModelAdmin):
     search_fields = ('nombre_est',)
     ordering = ('nombre_est',)
 # Registrar los demás modelos directamente
+
+
 
 @admin.register(Mantenimiento)
 class MantenimientoAdmin(admin.ModelAdmin):
