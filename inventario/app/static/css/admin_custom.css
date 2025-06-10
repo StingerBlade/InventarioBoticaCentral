@@ -1,0 +1,24 @@
+
+#header h1, #header h1 a {
+  color: white !important;
+  font-weight: bold;
+}
+
+
+
+
+/* --- TABLA DE MODELOS --- */
+.model-module {
+  background-color: white !important;
+}
+
+/* --- BOTONES Y LINKS --- */
+
+a:hover {
+  color: #e20613;
+}
+
+.button:hover, input[type="submit"]:hover, .default:hover {
+  background-color: #b3000f;
+}
+

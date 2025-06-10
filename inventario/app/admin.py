@@ -5,6 +5,10 @@ from .models import (
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
     Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
+admin.site.site_header = "Inventario - BOTICA CENTRAL"
+admin.site.site_title = "Panel de Administración"
+admin.site.index_title = "Bienvenido al Sistema de Inventario"
+
 class PrestamoInline(admin.TabularInline):
     model = Prestamo
     extra = 1
@@ -119,6 +123,3 @@ admin.site.register(Disponibilidad)
 admin.site.register(DispositivoMovil)
 
 
-admin.site.site_header = "Inventario - BOTICA CENTRAL"
-admin.site.site_title = "Panel de Administración"
-admin.site.index_title = "Bienvenido al Sistema de Inventario"
