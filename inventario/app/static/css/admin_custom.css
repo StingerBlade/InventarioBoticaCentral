@@ -4,9 +4,6 @@
   font-weight: bold;
 }
 
-
-
-
 /* --- TABLA DE MODELOS --- */
 .model-module {
   background-color: white !important;
@@ -15,10 +12,10 @@
 /* --- BOTONES Y LINKS --- */
 
 a:hover {
-  color: #e20613;
+  color: #4386c5;
 }
 
 .button:hover, input[type="submit"]:hover, .default:hover {
-  background-color: #b3000f;
+  background-color: #5595c9;
 }
 
