@@ -114,7 +114,7 @@ class Equipo(models.Model):
     descripcion = models.TextField(null=True, blank=True)
     fk_sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True, verbose_name="Sucursal")
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True, verbose_name="Razón Social")
-    tipo_almacenamiento = models.ForeignKey(TipoAlmacenamiento, on_delete=models.SET_NULL, null=True)
+    tipo_almacenamiento = models.ForeignKey(TipoAlmacenamiento, on_delete=models.SET_NULL, null=True, blank=True)
     capacidad_almacenamiento = models.IntegerField("Capacidad de almacenamiento (GB)", null=True, blank=True)
     ram = models.IntegerField("Memoria RAM (GB)", null=True, blank=True)
     procesador = models.CharField(max_length=100, null=True, blank=True)
@@ -196,6 +196,13 @@ class Prestamo(models.Model):
         if prestamos_activas.exists():
             raise ValidationError("Este equipo no está disponible para préstamo, ya está prestado a alguien más.")
 
+        # 🔴 NUEVA Validación: Ya asignado
+        asignaciones_activas = Asignacion.objects.filter(
+            fk_equipo=self.fk_equipo,
+            fecha_devolucion__isnull=True
+        )
+        if asignaciones_activas.exists():
+            raise ValidationError("Este equipo no puede prestarse porque está actualmente asignado a alguien más.")
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
@@ -243,6 +250,15 @@ class Asignacion(models.Model):
 
         if asignaciones_activas.exists():
             raise ValidationError("Este equipo no está disponible para asignarse, ya está asignado alguien más.")
+        
+        # 🔴 NUEVA Validación: Ya prestado
+        prestamos_activos = Prestamo.objects.filter(
+            fk_equipo=self.fk_equipo,
+            fecha_devolucion__isnull=True
+        )
+        if prestamos_activos.exists():
+            raise ValidationError("Este equipo no puede asignarse porque está actualmente en préstamo.")
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
