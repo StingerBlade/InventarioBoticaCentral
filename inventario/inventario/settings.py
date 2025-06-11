@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'import_export'
+    'import_export',
+    'GerenciaMantenimiento'
 ]
 
 MIDDLEWARE = [

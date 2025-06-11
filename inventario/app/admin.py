@@ -122,7 +122,6 @@ admin.site.register(RazonSocial)
 admin.site.register(TipoEquipo)
 admin.site.register(TipoAlmacenamiento)
 admin.site.register(Disponibilidad)
-
 admin.site.register(DispositivoMovil)
 
 
