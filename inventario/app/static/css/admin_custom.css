@@ -1,21 +1,34 @@
-
-#header h1, #header h1 a {
-  color: white !important;
-  font-weight: bold;
+/* Colores corporativos */
+:root {
+    --primary-color: #417690;
+    --secondary-color: #264B5D;
+    --accent-color: #ff6b35;
 }
 
-/* --- TABLA DE MODELOS --- */
-.model-module {
-  background-color: white !important;
+/* Header personalizado */
+#header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
 }
 
-/* --- BOTONES Y LINKS --- */
-
-a:hover {
-  color: #4386c5;
+/* Botones personalizados */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-.button:hover, input[type="submit"]:hover, .default:hover {
-  background-color: #5595c9;
+.button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
+/* Cards para los modelos */
+.app-inventario .model-equipo {
+    border-left: 4px solid var(--primary-color);
+}
+
+.app-inventario .model-empleado {
+    border-left: 4px solid var(--accent-color);
+}

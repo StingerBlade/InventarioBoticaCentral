@@ -1,16 +1,24 @@
 {% extends "admin/base.html" %}
 {% load static %}
-{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
-{% block branding %}
-<a href="{% url 'admin:index' %}">
-<span style="display:inline-block; width:20px;"></span>
-<img src="{% static 'img/logo.png' %}" alt="Logo" height="50">
-</a>
-<div id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></div>
-{% if user.is_anonymous %}
-  {% include "admin/color_theme_toggle.html" %}
-{% endif %}
+{% block title %}{{ title }} | Sistema Inventario Botica Central{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_custom.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block branding %}
+<div class="brand-container">
+    <img src="{% static 'img/logo.png' %}" alt="Botica Central" height="40">
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">Sistema de Inventario</a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+    <CENTER><p>&copy; 2024 Botica Central - Sistema de Inventario v1.0</p></CENTER>
+</div>
+{% endblock %}

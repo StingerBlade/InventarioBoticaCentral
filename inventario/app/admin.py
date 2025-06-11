@@ -1,5 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ExportMixin
+
+
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
@@ -8,6 +10,7 @@ from .models import (
 admin.site.site_header = "Inventario - BOTICA CENTRAL"
 admin.site.site_title = "Panel de Administración"
 admin.site.index_title = "Bienvenido al Sistema de Inventario"
+
 
 class PrestamoInline(admin.TabularInline):
     model = Prestamo
