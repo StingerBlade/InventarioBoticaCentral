@@ -35,14 +35,14 @@ class MantenimientoInline(admin.TabularInline):
 
 @admin.register(Equipo)
 class EquipoAdmin(ExportMixin, admin.ModelAdmin):
-    list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta')
+    list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
     inlines = [MantenimientoInline]
     fieldsets = (
         ('Datos generales', {
-            'fields': ('nombre', 'tipo', 'marca', 'modelo', 'numero_serie')
+            'fields': ('nombre', 'tipo', 'marca', 'modelo', 'numero_serie', 'fecha_de_adquisicion')
         }),
         ('Especificaciones técnicas', {
             'fields': ('ram', 'procesador', 'tipo_almacenamiento', 'capacidad_almacenamiento', 'version_windows')
@@ -54,7 +54,7 @@ class EquipoAdmin(ExportMixin, admin.ModelAdmin):
             'fields': ('licencia_office', 'descripcion')
         }),
     )
-
+    date_hierarchy='fecha_de_adquisicion'
 
 
 @admin.register(Sucursal)
@@ -104,7 +104,7 @@ class MantenimientoAdmin(admin.ModelAdmin):
     search_fields = ('fk_equipo__nombre', 'tecnico', 'estatus', 'tipo_mantenimiento__nombre')
     list_filter = ('estatus', 'tipo_mantenimiento__padre__padre__nombre')  # para filtrar por Preventivo/Correctivo
     ordering = ('fecha',)
-
+    date_hierarchy = 'fecha'
     def tipo_general(self, obj):
         return obj.tipo_general
     tipo_general.short_description = 'Tipo General'
