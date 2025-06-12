@@ -34,11 +34,11 @@ class RazonSocial(models.Model):
 
     def __str__(self):
         return self.razon
-    
+
 class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
     fk_municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE, verbose_name="Municipio")
-    fk_tipo_sucursal = models.ForeignKey('Tipo_Sucursal', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Sucursal")    
+    fk_tipo_sucursal = models.ForeignKey('Tipo_Sucursal', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Sucursal")
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True, verbose_name="Razón Social")
     class Meta:
         verbose_name = "Sucursal"
@@ -174,7 +174,7 @@ class Mantenimiento(models.Model):
 
 class Prestamo(models.Model):
     fk_empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, verbose_name="Empleado")
-    fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo")
+    fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo", null=True, blank=True)
     fecha_prestamo = models.DateField(auto_now_add=True)
     fecha_devolucion = models.DateField(null=True, blank=True)
     observaciones = models.TextField(null=True, blank=True)
@@ -184,6 +184,8 @@ class Prestamo(models.Model):
         verbose_name_plural = "Préstamos"
 
     def clean(self):
+        if not self.fk_equipo:
+            raise ValidationError("Debes seleccionar un equipo para el préstamo.")
     # Busca préstamos activos (sin fecha_devolucion) para este equipo
         prestamos_activas = Prestamo.objects.filter(
             fk_equipo=self.fk_equipo,
@@ -206,7 +208,7 @@ class Prestamo(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-        
+
         if self.fecha_devolucion:  # si se devolvió
             disponible = Disponibilidad.objects.get(nombre='Disponible')
             if self.fk_equipo.disponibilidad != disponible:
@@ -225,11 +227,13 @@ class Prestamo(models.Model):
         super().delete(*args, **kwargs)
 
     def __str__(self):
-        return f"Préstamo de {self.fk_equipo} a {self.fk_empleado}"
+        if self.fk_equipo and self.fk_empleado:
+            return f"Préstamo de {self.fk_equipo} a {self.fk_empleado}"
+        return "Préstamo incompleto"
 
 class Asignacion(models.Model):
     fk_empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, verbose_name="Empleado")
-    fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo")  
+    fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo", null=True, blank=True)
     fecha_asignacion = models.DateField(auto_now_add=True)
     fecha_devolucion = models.DateField(null=True, blank=True)
     observaciones = models.TextField(null=True, blank=True)
@@ -239,19 +243,19 @@ class Asignacion(models.Model):
         verbose_name_plural = "Asignaciones"
 
     def clean(self):
-    # Busca asignaciones activas (sin fecha_devolucion) para este equipo
+        if not self.fk_equipo:
+            raise ValidationError("Debes asignar un equipo.")
+
         asignaciones_activas = Asignacion.objects.filter(
             fk_equipo=self.fk_equipo,
             fecha_devolucion__isnull=True
         )
         if self.pk:
-            # Excluir esta misma instancia cuando actualices
             asignaciones_activas = asignaciones_activas.exclude(pk=self.pk)
 
         if asignaciones_activas.exists():
-            raise ValidationError("Este equipo no está disponible para asignarse, ya está asignado alguien más.")
-        
-        # 🔴 NUEVA Validación: Ya prestado
+            raise ValidationError("Este equipo no está disponible para asignarse, ya está asignado a alguien más.")
+
         prestamos_activos = Prestamo.objects.filter(
             fk_equipo=self.fk_equipo,
             fecha_devolucion__isnull=True
@@ -262,7 +266,7 @@ class Asignacion(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-        
+
         if self.fecha_devolucion:  # si se devolvió
             disponible = Disponibilidad.objects.get(nombre='Disponible')
             if self.fk_equipo.disponibilidad != disponible:
@@ -281,7 +285,9 @@ class Asignacion(models.Model):
         super().delete(*args, **kwargs)
 
     def __str__(self):
-        return f"Asignacion de {self.fk_equipo} a {self.fk_empleado}"
+        if self.fk_equipo and self.fk_empleado:
+            return f"Asignación de {self.fk_equipo} a {self.fk_empleado}"
+        return "Asignación incompleta"
 
 class DispositivoMovil(models.Model):
     PLAN_CHOICES = [
@@ -310,4 +316,4 @@ class Tipo_Sucursal(models.Model):
 
     def __str__(self):
         return self.nombre_tipo_sucursal
-    
+

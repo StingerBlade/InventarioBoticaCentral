@@ -2,6 +2,7 @@ from django.contrib import admin
 from import_export.admin import ExportMixin
 
 
+
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
@@ -71,7 +72,7 @@ class PrestamoAdmin(admin.ModelAdmin):
         'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
-    
+
 
 @admin.register(Asignacion)
 class AsignacionAdmin(admin.ModelAdmin):
@@ -81,7 +82,6 @@ class AsignacionAdmin(admin.ModelAdmin):
         'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
-
 
 @admin.register(Municipio)
 class MunicipioAdmin(admin.ModelAdmin):
