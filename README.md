@@ -123,6 +123,4 @@ Sigue las instrucciones de la interfaz para añadir, modificar o eliminar produc
 
 ¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, por favor crea un pull request o abre un issue.
 
-## Licencia
 
-Este proyecto está bajo la licencia MIT.
