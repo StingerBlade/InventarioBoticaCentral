@@ -109,21 +109,7 @@ Sigue estos pasos para poner en marcha el proyecto:
    print("Tipos de mantenimiento creados correctamente.")
    ```
 
-7. Ejecuta el servidor de desarrollo:
-   ```bash
-   python manage.py runserver
-   ```
-   > **¡Importante!** Este servidor es solo para desarrollo. Para producción, usa un servidor WSGI o ASGI profesional. Más información: [Django Deployment](https://docs.djangoproject.com/en/5.2/howto/deployment/)
-
-## Uso
-
-Sigue las instrucciones de la interfaz para añadir, modificar o eliminar productos del inventario.
-
-## Contribuciones
-
-¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, por favor crea un pull request o abre un issue.
-
-8. Insertar Estados en la base de datos:
+7. Insertar Estados en la base de datos:
    ``` bash
    INSERT INTO app_estado  (nombre_est) VALUES 
    ('Aguascalientes'),
@@ -159,7 +145,7 @@ Sigue las instrucciones de la interfaz para añadir, modificar o eliminar produc
    ('Yucatán'),
    ('Zacatecas');
    ```
-9. Insertar municipios con la fk de estado respectivo
+8. Insertar municipios con la fk de estado respectivo
    ```bash
    INSERT INTO app_municipio (id, nombre_mun, fk_estado_id) VALUES
    (1, 'Chihuahua', 6),
@@ -178,6 +164,69 @@ Sigue las instrucciones de la interfaz para añadir, modificar o eliminar produc
    (14, 'San Luis Potosi', 24),
    (15, 'Tijuana', 2);
    ```
+
+
+9. Inserta las razones sociales
+    ```bash
+    INSERT INTO app_razonsocial (id, razon, correo, direccion, rfc) VALUES
+      (1, 'Futufarma', NULL, NULL, NULL),
+      (2, 'Futumedical', NULL, NULL, NULL);
+    ```
+10. Inserta las sucursales
+    ```bash
+       INSERT INTO app_sucursal (id, nombre_suc, fk_municipio_id, fk_tipo_sucursal_id, fk_razon_social_id) VALUES
+      (1, 'Matriz', 1, 1, 1),
+      (2, 'Alamedas', 1, 1, 1),
+      (3, 'Aldama', 5, 1, 1),
+      (4, 'Americas', 1, 1, 1),
+      (5, 'Angeles', 1, 1, 1),
+      (6, 'Cantera', 1, 1, 1),
+      (7, 'CH-P', 1, 1, 1),
+      (8, 'Colon', 1, 1, 1),
+      (9, 'Comandancia Norte', 1, 1, 1),
+      (10, 'Comandancia Sur', 1, 1, 1),
+      (11, 'Corporativo Futumedica', 1, 2, 2),
+      (12, 'Cuauhtemoc', 3, 1, 1),
+      (13, 'Delicias', 2, 1, 1),
+      (14, 'Delicias 2', 2, 1, 1),
+      (15, 'Ford Corporativo', 10, NULL, NULL),
+      (16, 'Ford Mexico', 3, 3, 2),
+      (17, 'Ford Hermosillo', 4, 3, 2),
+      (18, 'Gas Parral', 7, 1, 1),
+      (19, 'Gomez Morin', 2, 1, 1),
+      (20, 'IMPE', 1, 1, 1),
+      (21, 'Independencia', 7, 1, 1),
+      (22, 'JM Iglesias', 1, 1, 1),
+      (23, 'Huerta', 3, 1, 1),
+      (24, 'Lopez Mateos', 9, 1, 1),
+      (25, 'Mirador', 1, 1, 1),
+      (26, 'Pensiones', 1, 1, 1),
+      (27, 'Politecnico', 1, 1, 1),
+      (28, 'UACJ', 9, 1, 1),
+      (29, 'Allende', 3, 1, 1),
+      (30, 'Morelos', 3, 1, 1),
+      (31, 'Zarco', 1, 1, 1),
+      (32, 'Aldama', 5, 1, 1),
+      (33, 'Camarago', 6, 1, 1),
+      (34, 'Cuauhtemoc', 3, 1, 1),
+      (35, 'Reliz II', 1, 1, 1),
+      (36, 'Bajio', 11, 3, 2),
+      (37, 'Mexicali', 13, 3, 2),
+      (38, 'Reynosa', 8, 3, 2),
+      (39, 'SLP', 14, 3, 2),
+      (40, 'Sonora', 4, 3, 2),
+      (41, 'Tijuana', 15, 3, 2),
+      (42, 'Torreon', 12, 3, 2),
+      (43, 'Corporativo Futufarma', 1, 2, 1);
+      ```
+## Uso
+
+Sigue las instrucciones de la interfaz para añadir, modificar o eliminar productos del inventario.
+
+## Contribuciones
+
+¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, por favor crea un pull request o abre un issue.
+
 
    
 
