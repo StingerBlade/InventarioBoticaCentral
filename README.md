@@ -123,4 +123,62 @@ Sigue las instrucciones de la interfaz para añadir, modificar o eliminar produc
 
 ¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, por favor crea un pull request o abre un issue.
 
+8. Insertar Estados en la base de datos:
+   ``` bash
+   INSERT INTO app_estado  (nombre_est) VALUES 
+   ('Aguascalientes'),
+   ('Baja California'),
+   ('Baja California Sur'),
+   ('Campeche'),
+   ('Chiapas'),
+   ('Chihuahua'),
+   ('Ciudad de México'),
+   ('Coahuila'),
+   ('Colima'),
+   ('Durango'),
+   ('Estado de México'),
+   ('Guanajuato'),
+   ('Guerrero'),
+   ('Hidalgo'),
+   ('Jalisco'),
+   ('Michoacán'),
+   ('Morelos'),
+   ('Nayarit'),
+   ('Nuevo León'),
+   ('Oaxaca'),
+   ('Puebla'),
+   ('Querétaro'),
+   ('Quintana Roo'),
+   ('San Luis Potosí'),
+   ('Sinaloa'),
+   ('Sonora'),
+   ('Tabasco'),
+   ('Tamaulipas'),
+   ('Tlaxcala'),
+   ('Veracruz'),
+   ('Yucatán'),
+   ('Zacatecas');
+   ```
+9. Insertar municipios con la fk de estado respectivo
+   ```bash
+   INSERT INTO app_municipio (id, nombre_mun, fk_estado_id) VALUES
+   (1, 'Chihuahua', 6),
+   (2, 'Delicias', 6),
+   (3, 'Cuauhtemoc', 6),
+   (4, 'Hermosillo', 26),
+   (5, 'Aldama', 6),
+   (6, 'Camargo', 6),
+   (7, 'Parral', 6),
+   (8, 'Reynosa', 28),
+   (9, 'Juarez', 6),
+   (10, 'Naucalpan de Juarez', 15),
+   (11, 'Leon', 12),
+   (12, 'Torreon', 10),
+   (13, 'Mexicali', 2),
+   (14, 'San Luis Potosi', 24),
+   (15, 'Tijuana', 2);
+   ```
 
+   
+
+   
