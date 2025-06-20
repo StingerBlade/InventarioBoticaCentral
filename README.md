@@ -20,22 +20,54 @@ Este proyecto es una aplicación para gestionar inventarios, desarrollada princi
 - HTML
 - CSS
 
-## Instalación
+## Preparacion del sistema
+   # Actualizar el sistema
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
+ # Instalar dependencias basicas
+   ```bash
+   sudo apt install -y python3 python3-pip python3-venv nginx mysql-server git curl
+   ```
+## Preparacion y configuracion de MySQL
+   # Instalacion y configuracion
+   ```bash
+   sudo mysql_secure_installation
+   ```
+   # Crear base de datos y usuario
+   ```bash
+   sudo mysql -u root -p
+   ``` 
+   ```bash
+   CREATE DATABASE inventario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE USER 'inventario_user'@'localhost' IDENTIFIED BY 'tu_password_seguro';
+   GRANT ALL PRIVILEGES ON inventario.* TO 'inventario_user'@'localhost';
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
+## Configurar el proyecto Django
+   # Crear directorio
+   ```bash
+   sudo mkdir -p /var/www/inventario
+   sudo chown $USER:$USER /var/www/inventario
+   cd /var/www/inventario
+   ```
+# Instalación
 
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/StingerBlade/proyectoEstadias.git
    ```
-2. Accede al directorio del proyecto:
+3. Accede al directorio del proyecto:
    ```bash
    cd proyectoEstadias
    ```
-3. Crea y activa un entorno virtual:
+4. Crea y activa un entorno virtual:
    ```bash
    python -m venv venv
    source venv/bin/activate  # En Windows usa: venv\Scripts\activate
    ```
-4. Instala las dependencias necesarias:
+5. Instala las dependencias necesarias:
    ```bash
    pip install -r requirements.txt
    ```
@@ -55,9 +87,26 @@ Este proyecto es una aplicación para gestionar inventarios, desarrollada princi
    tablib               3.8.0
    tzdata               2025.2
    ```
+## Configurar variables de entorno
+   # Crear archivo .env:
+   ``` bash
+   nano .env
+   ```
+   Contenido del .env:
+   ```bash
+   DJANGO_SECRET_KEY=tu-clave-super-secreta-de-50-caracteres-minimo
+   DB_NAME=inventario
+   DB_USER=inventario_user
+   DB_PASSWORD=tu_password_seguro
+   DB_HOST=localhost
+   DB_PORT=3306
+   ```
 
 ## Despliegue
-
+   Crear directorios necesarios:
+   ```bash
+   mkdir -p logs media staticfiles
+   ```
 Sigue estos pasos para poner en marcha el proyecto:
 
 5. Realiza las migraciones de la base de datos:
@@ -219,6 +268,11 @@ Sigue estos pasos para poner en marcha el proyecto:
       (42, 'Torreon', 12, 3, 2),
       (43, 'Corporativo Futufarma', 1, 2, 1);
       ```
+
+# Probar que funciona:
+```bash
+nano gunicorn.conf.py
+```
 ## Uso
 
 Sigue las instrucciones de la interfaz para añadir, modificar o eliminar productos del inventario.
