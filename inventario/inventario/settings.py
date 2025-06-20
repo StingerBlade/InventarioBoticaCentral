@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n%!l&=loq+y-iyj3!e^$5%1)mko6#1$cg%$gcr5msd-pc9r3ms'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+# This is a list of allowed hosts for the Django application.
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '172.25.X.X', '*']
 
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'import_export',
-    'GerenciaMantenimiento'
+    
 ]
 
 MIDDLEWARE = [
