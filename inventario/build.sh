@@ -3,8 +3,6 @@ set -o errexit
 
 echo "🚀 Iniciando build process..."
 
-# Cambiar al directorio con manage.py
-cd inventario
 
 echo "📦 Instalando dependencias..."
 pip install -r ../requirements.txt
