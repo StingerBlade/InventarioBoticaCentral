@@ -30,6 +30,7 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 # This is a list of allowed hosts for the Django application.
 ALLOWED_HOSTS = [
+    '0.0.0.0',
     'localhost', 
     '127.0.0.1', 
     '.render.com',  # Para Render
