@@ -1,5 +1,5 @@
 Django==5.2.2
-mysqlclient==2.2.7
+psycopg2-binary==2.9.7
 django-import-export==4.3.7
 openpyxl==3.1.5
 diff-match-patch==20241021
@@ -7,3 +7,6 @@ tablib==3.8.0
 et_xmlfile==2.0.0
 asgiref==3.8.1
 sqlparse==0.5.3
+python-dotenv==1.0.0
+gunicorn==21.2.0
+whitenoise==6.5.0
