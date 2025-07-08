@@ -3,285 +3,133 @@
 
 Sistema de Inventario
 
-## Descripción
+# 📦 Inventario Botica Central
 
-Este proyecto es una aplicación para gestionar inventarios, desarrollada principalmente en Python, con componentes en HTML y CSS para la interfaz de usuario. Permite registrar, actualizar y consultar productos, facilitando el control eficiente de los recursos.
+## Descripción general
 
-## Características
+**Inventario Botica Central** es un sistema de gestión de inventario desarrollado en Django, diseñado para realizar el seguimiento de equipos de TI, la administración de personal y la programación de mantenimiento en múltiples sucursales farmacéuticas en México. Proporciona una gestión centralizada de activos, registros de empleados y operaciones de mantenimiento para organizaciones que operan bajo distintas razones sociales.
 
-- Registro de productos
-- Actualización y eliminación de inventario
-- Consulta de stock disponible
-- Interfaz de usuario amigable
+---
 
-## Tecnologías utilizadas
+## ✨ Características
 
-- Python
-- HTML
-- CSS
+* Gestión de **Equipos**, **Empleados**, **Préstamos** y **Asignaciones** mediante modelos de Django.
+* Registro de **mantenimientos** con soporte para jerarquía de tipos de mantenimiento.
+* Administración de entidades geográficas: **Estados**, **Municipios**, **Sucursales**, **Razón Social** y **Departamentos**.
+* Importación y exportación de datos en formatos Excel/CSV con `django-import-export`.
+* Gestión de archivos estáticos en producción con **WhiteNoise**.
+* Despliegue flexible con configuración basada en variables de entorno.
+* Soporte para desarrollo local con SQLite y producción en PostgreSQL (local o Supabase).
 
-## Preparacion del sistema
-   # Actualizar el sistema
-   ```bash
-   sudo apt update && sudo apt upgrade -y
-   ```
- # Instalar dependencias basicas
-   ```bash
-   sudo apt install -y python3 python3-pip python3-venv nginx mysql-server git curl
-   ```
-## Preparacion y configuracion de MySQL
-   # Instalacion y configuracion
-   ```bash
-   sudo mysql_secure_installation
-   ```
-   # Crear base de datos y usuario
-   ```bash
-   sudo mysql -u root -p
-   ``` 
-   ```bash
-   CREATE DATABASE inventario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   CREATE USER 'inventario_user'@'localhost' IDENTIFIED BY 'tu_password_seguro';
-   GRANT ALL PRIVILEGES ON inventario.* TO 'inventario_user'@'localhost';
-   FLUSH PRIVILEGES;
-   EXIT;
-   ```
-## Configurar el proyecto Django
-   # Crear directorio
-   ```bash
-   sudo mkdir -p /var/www/inventario
-   sudo chown $USER:$USER /var/www/inventario
-   cd /var/www/inventario
-   ```
-# Instalación
+---
+
+## 🧱 Estructura del proyecto
+
+```
+inventario/
+├── inventario/      # Configuración principal del proyecto
+│   ├── settings.py  # Configuración de apps, DB, seguridad, import/export, static, entorno
+│   ├── urls.py      # Rutas globales
+│   └── …
+├── app/             # Módulo principal de negocio
+│   ├── models.py    # Modelos: Estado, Municipio, Sucursal, RazonSocial, TipoMantenimiento, Equipo, Empleado, etc.
+│   ├── views.py     # Lógica de negocio
+│   ├── admin.py     # Administración: EquipoAdmin, EmpleadoAdmin
+│   ├── resources.py # Recursos para import/export (EquipoResource)
+│   ├── urls.py      # Rutas específicas de la app
+│   ├── templates/   # Plantillas HTML
+│   └── static/      # CSS, imágenes
+└── manage.py
+```
+
+---
+
+## ⚙️ Dependencias y stack tecnológico
+
+| Componente              | Tecnología            | Objetivo                            |
+| ----------------------- | --------------------- | ----------------------------------- |
+| Framework web           | Django 5.2.1          | Base del proyecto                   |
+| Base de datos           | PostgreSQL / Supabase | Almacenamiento principal            |
+| Importación/Exportación | django-import-export  | Procesamiento de archivos Excel/CSV |
+| Archivos estáticos      | WhiteNoise            | Servicio en producción              |
+| Variables de entorno    | python-dotenv         | Gestión de configuración segura     |
+| Despliegue              | Render.com            | Hosting para producción             |
+
+---
+
+## 🔧 Variables de entorno
+
+Configura un archivo `.env` en la raíz con:
+
+```dotenv
+SECRET_KEY=tu_clave_secreta
+DEBUG=True  # o False en producción
+DATABASE_URL=postgres://...  # para producción
+RENDER_EXTERNAL_HOSTNAME=tu_app.render.com  # sólo en deploy
+DB_NAME=inventario  # opcional, para desarrollo local
+```
+
+---
+
+## 🚀 Instalación local
 
 1. Clona el repositorio:
+
    ```bash
-   git clone https://github.com/StingerBlade/proyectoEstadias.git
+   git clone https://github.com/StingerBlade/InventarioBoticaCentral.git
+   cd InventarioBoticaCentral
    ```
-3. Accede al directorio del proyecto:
-   ```bash
-   cd proyectoEstadias
-   ```
-4. Crea y activa un entorno virtual:
+2. Crea y activa un entorno virtual:
+
    ```bash
    python -m venv venv
-   source venv/bin/activate  # En Windows usa: venv\Scripts\activate
+   source venv/bin/activate  # en Windows: venv\Scripts\activate
    ```
-5. Instala las dependencias necesarias:
+3. Instala dependencias:
+
    ```bash
    pip install -r requirements.txt
    ```
-   **O bien, asegúrate de tener los siguientes paquetes instalados en tu entorno:**
-   ```
-   asgiref              3.8.1
-   diff-match-patch     20241021
-   Django               5.2.1
-   django-import-export 4.3.7
-   et_xmlfile           2.0.0
-   mysqlclient          2.2.7
-   npm                  0.1.1
-   openpyxl             3.1.5
-   optional-django      0.1.0
-   pip                  25.0.1
-   sqlparse             0.5.3
-   tablib               3.8.0
-   tzdata               2025.2
-   ```
-## Configurar variables de entorno
-   # Crear archivo .env:
-   ``` bash
-   nano .env
-   ```
-   Contenido del .env:
-   ```bash
-   DJANGO_SECRET_KEY=tu-clave-super-secreta-de-50-caracteres-minimo
-   DB_NAME=inventario
-   DB_USER=inventario_user
-   DB_PASSWORD=tu_password_seguro
-   DB_HOST=localhost
-   DB_PORT=3306
-   ```
+4. Crea el archivo `.env` como se describió arriba.
+5. Ejecuta migraciones:
 
-## Despliegue
-   Crear directorios necesarios:
-   ```bash
-   mkdir -p logs media staticfiles
-   ```
-Sigue estos pasos para poner en marcha el proyecto:
-
-5. Realiza las migraciones de la base de datos:
    ```bash
    python manage.py migrate
    ```
+6. Inicializa datos base en Django shell (Estados, Municipios, Razón Social…):
 
-6. Crea los tipos de mantenimiento en la base de datos:
-
-   Inicia el shell de Django:
    ```bash
    python manage.py shell
+   >>> from app.models import TipoMantenimiento
+   >>> # Crea jerarquía de tipos de mantenimiento
    ```
+7. Arranca el servidor local:
 
-   Copia y ejecuta el siguiente código en el shell para poblar la tabla `TipoMantenimiento`:
-   ```python
-   from inventario.models import TipoMantenimiento
-
-   # Helper para crear jerárquicamente
-   def crear_tipo(nombre, padre=None):
-       obj, created = TipoMantenimiento.objects.get_or_create(nombre=nombre, padre=padre)
-       return obj
-
-   # Nivel 1
-   preventivo = crear_tipo("Preventivo")
-   correctivo = crear_tipo("Correctivo")
-
-   # Nivel 2 Preventivo
-   inspeccion = crear_tipo("Inspección", preventivo)
-   limpieza = crear_tipo("Limpieza", preventivo)
-   optimizacion = crear_tipo("Optimización", preventivo)
-
-   # Nivel 3 Limpieza
-   cpu = crear_tipo("CPU", limpieza)
-   monitor = crear_tipo("Monitor", limpieza)
-   teclado_mouse = crear_tipo("Teclado/Mouse", limpieza)
-
-   # Nivel 2 Correctivo
-   reparacion_software = crear_tipo("Reparación de software", correctivo)
-   reparacion_hardware = crear_tipo("Reparación de hardware", correctivo)
-
-   # Nivel 3 Reparación de software
-   reinstalar_windows = crear_tipo("Reinstalar Windows", reparacion_software)
-   desinstalacion_programas = crear_tipo("Desinstalación de programas", reparacion_software)
-
-   # Nivel 3 Reparación de hardware
-   reemplazo_componente = crear_tipo("Reemplazo de componente", reparacion_hardware)
-
-   print("Tipos de mantenimiento creados correctamente.")
-   ```
-
-7. Insertar Estados en la base de datos:
-   ``` bash
-   INSERT INTO app_estado  (nombre_est) VALUES 
-   ('Aguascalientes'),
-   ('Baja California'),
-   ('Baja California Sur'),
-   ('Campeche'),
-   ('Chiapas'),
-   ('Chihuahua'),
-   ('Ciudad de México'),
-   ('Coahuila'),
-   ('Colima'),
-   ('Durango'),
-   ('Estado de México'),
-   ('Guanajuato'),
-   ('Guerrero'),
-   ('Hidalgo'),
-   ('Jalisco'),
-   ('Michoacán'),
-   ('Morelos'),
-   ('Nayarit'),
-   ('Nuevo León'),
-   ('Oaxaca'),
-   ('Puebla'),
-   ('Querétaro'),
-   ('Quintana Roo'),
-   ('San Luis Potosí'),
-   ('Sinaloa'),
-   ('Sonora'),
-   ('Tabasco'),
-   ('Tamaulipas'),
-   ('Tlaxcala'),
-   ('Veracruz'),
-   ('Yucatán'),
-   ('Zacatecas');
-   ```
-8. Insertar municipios con la fk de estado respectivo
    ```bash
-   INSERT INTO app_municipio (id, nombre_mun, fk_estado_id) VALUES
-   (1, 'Chihuahua', 6),
-   (2, 'Delicias', 6),
-   (3, 'Cuauhtemoc', 6),
-   (4, 'Hermosillo', 26),
-   (5, 'Aldama', 6),
-   (6, 'Camargo', 6),
-   (7, 'Parral', 6),
-   (8, 'Reynosa', 28),
-   (9, 'Juarez', 6),
-   (10, 'Naucalpan de Juarez', 15),
-   (11, 'Leon', 12),
-   (12, 'Torreon', 10),
-   (13, 'Mexicali', 2),
-   (14, 'San Luis Potosi', 24),
-   (15, 'Tijuana', 2);
+   python manage.py runserver
    ```
 
+---
 
-9. Inserta las razones sociales
-    ```bash
-    INSERT INTO app_razonsocial (id, razon, correo, direccion, rfc) VALUES
-      (1, 'Futufarma', NULL, NULL, NULL),
-      (2, 'Futumedical', NULL, NULL, NULL);
-    ```
-10. Inserta las sucursales
-    ```bash
-       INSERT INTO app_sucursal (id, nombre_suc, fk_municipio_id, fk_tipo_sucursal_id, fk_razon_social_id) VALUES
-      (1, 'Matriz', 1, 1, 1),
-      (2, 'Alamedas', 1, 1, 1),
-      (3, 'Aldama', 5, 1, 1),
-      (4, 'Americas', 1, 1, 1),
-      (5, 'Angeles', 1, 1, 1),
-      (6, 'Cantera', 1, 1, 1),
-      (7, 'CH-P', 1, 1, 1),
-      (8, 'Colon', 1, 1, 1),
-      (9, 'Comandancia Norte', 1, 1, 1),
-      (10, 'Comandancia Sur', 1, 1, 1),
-      (11, 'Corporativo Futumedica', 1, 2, 2),
-      (12, 'Cuauhtemoc', 3, 1, 1),
-      (13, 'Delicias', 2, 1, 1),
-      (14, 'Delicias 2', 2, 1, 1),
-      (15, 'Ford Corporativo', 10, NULL, NULL),
-      (16, 'Ford Mexico', 3, 3, 2),
-      (17, 'Ford Hermosillo', 4, 3, 2),
-      (18, 'Gas Parral', 7, 1, 1),
-      (19, 'Gomez Morin', 2, 1, 1),
-      (20, 'IMPE', 1, 1, 1),
-      (21, 'Independencia', 7, 1, 1),
-      (22, 'JM Iglesias', 1, 1, 1),
-      (23, 'Huerta', 3, 1, 1),
-      (24, 'Lopez Mateos', 9, 1, 1),
-      (25, 'Mirador', 1, 1, 1),
-      (26, 'Pensiones', 1, 1, 1),
-      (27, 'Politecnico', 1, 1, 1),
-      (28, 'UACJ', 9, 1, 1),
-      (29, 'Allende', 3, 1, 1),
-      (30, 'Morelos', 3, 1, 1),
-      (31, 'Zarco', 1, 1, 1),
-      (32, 'Aldama', 5, 1, 1),
-      (33, 'Camarago', 6, 1, 1),
-      (34, 'Cuauhtemoc', 3, 1, 1),
-      (35, 'Reliz II', 1, 1, 1),
-      (36, 'Bajio', 11, 3, 2),
-      (37, 'Mexicali', 13, 3, 2),
-      (38, 'Reynosa', 8, 3, 2),
-      (39, 'SLP', 14, 3, 2),
-      (40, 'Sonora', 4, 3, 2),
-      (41, 'Tijuana', 15, 3, 2),
-      (42, 'Torreon', 12, 3, 2),
-      (43, 'Corporativo Futufarma', 1, 2, 1);
-      ```
+## 📦 Uso en producción
 
-# Probar que funciona:
-```bash
-nano gunicorn.conf.py
-```
-## Uso
+1. Asegúrate de definir en `.env`:
 
-Sigue las instrucciones de la interfaz para añadir, modificar o eliminar productos del inventario.
+   * `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`, `RENDER_EXTERNAL_HOSTNAME`.
+2. Habilita `WhiteNoise` y configuraciones de seguridad (SSL, HSTS, cookies seguras).
+3. Ejecuta `collectstatic`:
 
-## Contribuciones
+   ```bash
+   python manage.py collectstatic
+   ```
+4. Despliega en **Render.com** o plataforma similar.
+5. Administra datos a través del panel de Django Admin.
 
-¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, por favor crea un pull request o abre un issue.
+---
 
+## 📈 Procesos de importación/exportación
 
-   
+El sistema permite gestionar datos de equipos mediante archivos `.xlsx` o `.csv` desde Django Admin, usando `EquipoResource` en `app/resources.py`. Las importaciones usan transacciones para mayor integridad, manteniendo un registro de operaciones y resolviendo claves foráneas automáticamente.
 
-   
+---
+
