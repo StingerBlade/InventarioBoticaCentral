@@ -1,7 +1,9 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from .resources import EquipoResource  # Importar el resource que creamos
-
+from django.urls import reverse
+from django.utils.html import format_html
+from django.http import HttpResponseRedirect
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
@@ -75,6 +77,24 @@ class AsignacionAdmin(admin.ModelAdmin):
         'fk_empleado__nombre_empleado'
     )
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
+    
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['custom_button'] = True
+        return super().changelist_view(request, extra_context=extra_context)
+
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        custom_urls = [
+            path('custom-action/', self.custom_action, name='asignacion_custom_action'),
+        ]
+        return custom_urls + urls
+
+    def custom_action(self, request):
+        # Aquí puedes redirigir a cualquier URL
+        return HttpResponseRedirect('https://www.ejemplo.com')  # Cambia por tu URL
+    
 
 @admin.register(Municipio)
 class MunicipioAdmin(admin.ModelAdmin):
