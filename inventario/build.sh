@@ -28,7 +28,10 @@ estados_data = [
 ]
 
 for estado_nombre in estados_data:
-    Estado.objects.get_or_create(nombre_est=estado_nombre)
+    Estado.objects.update_or_create(
+        nombre_est=estado_nombre,
+        defaults={'nombre_est': estado_nombre}
+    )
 
 # Crear algunos municipios básicos
 chihuahua_estado = Estado.objects.get(nombre_est='Chihuahua')
@@ -37,26 +40,46 @@ municipios_chihuahua = [
 ]
 
 for municipio_nombre in municipios_chihuahua:
-    Municipio.objects.get_or_create(
+    Municipio.objects.update_or_create(
         nombre_mun=municipio_nombre,
-        fk_estado=chihuahua_estado
+        fk_estado=chihuahua_estado,
+        defaults={
+            'nombre_mun': municipio_nombre,
+            'fk_estado': chihuahua_estado
+        }
     )
 
 # Crear Razones Sociales
-RazonSocial.objects.get_or_create(razon='Futufarma')
-RazonSocial.objects.get_or_create(razon='Futumedical')
+RazonSocial.objects.update_or_create(
+    razon='Futufarma',
+    defaults={'razon': 'Futufarma'}
+)
+RazonSocial.objects.update_or_create(
+    razon='Futumedical',
+    defaults={'razon': 'Futumedical'}
+)
 
 # Crear Tipos de Sucursal
-Tipo_Sucursal.objects.get_or_create(nombre_tipo_sucursal='Farmacia')
-Tipo_Sucursal.objects.get_or_create(nombre_tipo_sucursal='Corporativo')
-Tipo_Sucursal.objects.get_or_create(nombre_tipo_sucursal='Planta')
+Tipo_Sucursal.objects.update_or_create(
+    nombre_tipo_sucursal='Farmacia',
+    defaults={'nombre_tipo_sucursal': 'Farmacia'}
+)
+Tipo_Sucursal.objects.update_or_create(
+    nombre_tipo_sucursal='Corporativo',
+    defaults={'nombre_tipo_sucursal': 'Corporativo'}
+)
+Tipo_Sucursal.objects.update_or_create(
+    nombre_tipo_sucursal='Planta',
+    defaults={'nombre_tipo_sucursal': 'Planta'}
+)
 
 # Crear Estados de Disponibilidad
-Disponibilidad.objects.get_or_create(nombre='Disponible')
-Disponibilidad.objects.get_or_create(nombre='En préstamo')
-Disponibilidad.objects.get_or_create(nombre='Asignado')
-Disponibilidad.objects.get_or_create(nombre='En reparación')
-Disponibilidad.objects.get_or_create(nombre='Fuera de servicio')
+disponibilidades = ['Disponible', 'En préstamo', 'Asignado', 'En reparación', 'Fuera de servicio']
+for disponibilidad_nombre in disponibilidades:
+    Disponibilidad.objects.update_or_create(
+        nombre=disponibilidad_nombre,
+        defaults={'nombre': disponibilidad_nombre}
+    )
 
 # Crear Tipos de Equipo
 tipos_equipo = [
@@ -65,16 +88,26 @@ tipos_equipo = [
 ]
 
 for tipo_nombre in tipos_equipo:
-    TipoEquipo.objects.get_or_create(nombre_tipo_equipo=tipo_nombre)
+    TipoEquipo.objects.update_or_create(
+        nombre_tipo_equipo=tipo_nombre,
+        defaults={'nombre_tipo_equipo': tipo_nombre}
+    )
 
 # Crear Tipos de Almacenamiento
 tipos_almacenamiento = ['HDD', 'SSD', 'eMMC', 'NVMe']
 for tipo_alm in tipos_almacenamiento:
-    TipoAlmacenamiento.objects.get_or_create(nombre=tipo_alm)
+    TipoAlmacenamiento.objects.update_or_create(
+        nombre=tipo_alm,
+        defaults={'nombre': tipo_alm}
+    )
 
 # Crear Tipos de Mantenimiento
 def crear_tipo(nombre, padre=None):
-    obj, created = TipoMantenimiento.objects.get_or_create(nombre=nombre, padre=padre)
+    obj, created = TipoMantenimiento.objects.update_or_create(
+        nombre=nombre,
+        padre=padre,
+        defaults={'nombre': nombre, 'padre': padre}
+    )
     return obj
 
 # Nivel 1
