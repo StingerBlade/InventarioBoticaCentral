@@ -10,7 +10,7 @@ from .models import (
     Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
 from .inlines import MantenimientoInline, AsignacionInline, PrestamoInline
-
+from .resources import AsignacionResource
 admin.site.site_header = "Inventario - BOTICA CENTRAL"
 admin.site.site_title = "Panel de Administración"
 admin.site.index_title = "Bienvenido al Sistema de Inventario"
@@ -70,13 +70,15 @@ class PrestamoAdmin(admin.ModelAdmin):
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
 
 @admin.register(Asignacion)
-class AsignacionAdmin(admin.ModelAdmin):
+class AsignacionAdmin(ImportExportModelAdmin):
+    resource_class = AsignacionResource  # Agregar esta línea
+    
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_asignacion', 'fecha_devolucion')
     search_fields = (
         'fk_equipo__nombre', 'fk_equipo__marca', 'fk_equipo__modelo',
         'fk_empleado__nombre_empleado'
     )
-    list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
+    list_filter = ('fk_equipo__tipo', 'fk_equipo__fk_sucursal')
     
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
@@ -92,10 +94,8 @@ class AsignacionAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def custom_action(self, request):
-        # Aquí puedes redirigir a cualquier URL
-        return HttpResponseRedirect('https://www.ejemplo.com')  # Cambia por tu URL
+        return HttpResponseRedirect('https://www.ejemplo.com')
     
-
 @admin.register(Municipio)
 class MunicipioAdmin(admin.ModelAdmin):
     list_display = ('nombre_mun', 'fk_estado')

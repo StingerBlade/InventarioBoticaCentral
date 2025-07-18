@@ -1,0 +1,9 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+    {{ block.super }}
+    <button onclick="window.open('http://172.25.2.158:5173', '_blank')" 
+            style="margin-bottom: 10px; background-color: #3B6C84; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+        Ver Responsivas de Equipo
+    </button>
+{% endblock %}

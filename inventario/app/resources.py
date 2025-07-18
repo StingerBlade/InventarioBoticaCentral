@@ -3,8 +3,38 @@ from import_export.widgets import ForeignKeyWidget, BooleanWidget, DateWidget
 from datetime import datetime
 from .models import (
     Equipo, TipoEquipo, TipoAlmacenamiento, Disponibilidad,
-    Sucursal, RazonSocial
+    Sucursal, RazonSocial, Asignacion, Empleado
 )
+class AsignacionResource(resources.ModelResource):
+    # Campos personalizados para mostrar nombres en lugar de IDs
+    empleado_nombre = fields.Field(
+        column_name='Empleado',
+        attribute='fk_empleado',
+        widget=ForeignKeyWidget(Empleado, 'nombre_empleado')
+    )
+    
+    equipo_nombre = fields.Field(
+        column_name='Equipo',
+        attribute='fk_equipo',
+        widget=ForeignKeyWidget(Equipo, 'nombre')
+    )
+    
+    class Meta:
+        model = Asignacion
+        fields = (
+            'id',
+            'empleado_nombre',
+            'equipo_nombre', 
+            'fecha_asignacion',
+            'fecha_devolucion'
+        )
+        export_order = (
+            'id',
+            'empleado_nombre',
+            'equipo_nombre',
+            'fecha_asignacion',
+            'fecha_devolucion'
+        )
 
 class FlexibleDateWidget(DateWidget):
     """Widget de fecha que maneja fechas de Excel correctamente"""
