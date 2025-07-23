@@ -48,9 +48,13 @@ class EquipoAdmin(ImportExportModelAdmin):  # Cambiar ExportMixin por ImportExpo
         ('Ubicación y estado', {
             'fields': ('fk_sucursal', 'fk_razon_social', 'disponibilidad')
         }),
+        ('Datos Proveedor', {
+            'fields':('rfc', 'folio')
+        }),
         ('Otros', {
             'fields': ('licencia_office', 'descripcion')
         }),
+
     )
     date_hierarchy='fecha_de_adquisicion'
 

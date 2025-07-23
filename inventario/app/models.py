@@ -121,6 +121,8 @@ class Equipo(models.Model):
     disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
     licencia_office = models.BooleanField(default=False, verbose_name="Licencia Office")
     version_windows = models.CharField(max_length=50, null=True, blank=True, verbose_name="Versión de Windows")
+    folio = models.CharField(max_length=50, null=True, blank=True, verbose_name="Folio")
+    rfc = models.CharField(max_length=13, null=True, blank=True, verbose_name="RFC")
     class Meta:
         verbose_name = "Equipo"
         verbose_name_plural = "Equipos"
