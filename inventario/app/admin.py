@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
-    Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
+    Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion, EquipoEliminado
 )
 from .inlines import MantenimientoInline, AsignacionInline, PrestamoInline
 from .resources import AsignacionResource
@@ -15,8 +15,164 @@ admin.site.site_header = "Inventario - BOTICA CENTRAL"
 admin.site.site_title = "Panel de Administración"
 admin.site.index_title = "Bienvenido al Sistema de Inventario"
 
+# Agregar esto a tu admin.py existente
 
-
+@admin.register(EquipoEliminado)
+class EquipoEliminadoAdmin(admin.ModelAdmin):
+    list_display = (
+        'equipo_id_original', 
+        'nombre', 
+        'marca', 
+        'modelo', 
+        'tipo_equipo_nombre',
+        'sucursal_nombre', 
+        'fecha_eliminacion', 
+        'usuario_eliminacion'
+    )
+    
+    list_filter = (
+        'fecha_eliminacion',
+        'tipo_equipo_nombre',
+        'sucursal_nombre',
+        'razon_social_nombre',
+        'disponibilidad_nombre',
+        'usuario_eliminacion'
+    )
+    
+    search_fields = (
+        'nombre', 
+        'marca', 
+        'modelo', 
+        'numero_serie',
+        'equipo_id_original',
+        'usuario_eliminacion'
+    )
+    
+    readonly_fields = (
+        'equipo_id_original',
+        'nombre',
+        'fecha_de_adquisicion',
+        'fecha_de_alta',
+        'marca',
+        'modelo',
+        'numero_serie',
+        'descripcion',
+        'capacidad_almacenamiento',
+        'ram',
+        'procesador',
+        'folio',
+        'rfc',
+        'tipo_equipo_nombre',
+        'sucursal_nombre',
+        'razon_social_nombre',
+        'tipo_almacenamiento_nombre',
+        'disponibilidad_nombre',
+        'fecha_eliminacion',
+        'datos_completos'
+    )
+    
+    fieldsets = (
+        ('Información del Equipo Eliminado', {
+            'fields': (
+                'equipo_id_original',
+                'nombre',
+                'tipo_equipo_nombre',
+                'marca',
+                'modelo',
+                'numero_serie'
+            )
+        }),
+        ('Fechas', {
+            'fields': (
+                'fecha_de_adquisicion',
+                'fecha_de_alta',
+                'fecha_eliminacion'
+            )
+        }),
+        ('Especificaciones Técnicas', {
+            'fields': (
+                'ram',
+                'procesador',
+                'tipo_almacenamiento_nombre',
+                'capacidad_almacenamiento'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Ubicación Original', {
+            'fields': (
+                'sucursal_nombre',
+                'razon_social_nombre',
+                'disponibilidad_nombre'
+            )
+        }),
+        ('Información de Eliminación', {
+            'fields': (
+                'usuario_eliminacion',
+                'motivo_eliminacion'
+            ),
+            'classes': ('wide',)
+        }),
+        ('Proveedor', {
+            'fields': (
+                'folio',
+                'rfc'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Otros Datos', {
+            'fields': (
+                'descripcion',
+                'datos_completos'
+            ),
+            'classes': ('collapse',)
+        })
+    )
+    
+    ordering = ('-fecha_eliminacion',)
+    date_hierarchy = 'fecha_eliminacion'
+    
+    # Deshabilitar agregar nuevos registros (solo se crean automáticamente)
+    def has_add_permission(self, request):
+        return False
+    
+    # Deshabilitar edición (solo lectura)
+    def has_change_permission(self, request, obj=None):
+        return True  # Permitir ver, pero campos son readonly
+    
+    # Opcional: permitir eliminar registros muy antiguos
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    
+    # Método para mostrar datos JSON de forma más legible
+    def datos_completos_formatted(self, obj):
+        if obj.datos_completos:
+            import json
+            return format_html(
+                '<pre>{}</pre>', 
+                json.dumps(obj.datos_completos, indent=2, ensure_ascii=False)
+            )
+        return "Sin datos adicionales"
+    datos_completos_formatted.short_description = 'Datos Completos'
+    
+    # Agregar acción personalizada para restaurar equipos (opcional)
+    actions = ['restaurar_equipos']
+    
+    def restaurar_equipos(self, request, queryset):
+        """
+        Acción personalizada para restaurar equipos eliminados
+        """
+        count = 0
+        for equipo_eliminado in queryset:
+            # Aquí podrías implementar la lógica para restaurar
+            # Por ahora solo mostramos un mensaje
+            count += 1
+        
+        self.message_user(
+            request,
+            f'Se seleccionaron {count} equipos. '
+            'La funcionalidad de restauración debe implementarse según tus necesidades.'
+        )
+    restaurar_equipos.short_description = "Marcar para restauración"
 
 @admin.register(Empleado)
 class EmpleadoAdmin(admin.ModelAdmin):
@@ -32,7 +188,13 @@ class EmpleadoAdmin(admin.ModelAdmin):
 @admin.register(Equipo)
 class EquipoAdmin(ImportExportModelAdmin):  # Cambiar ExportMixin por ImportExportModelAdmin
     resource_class = EquipoResource  # Agregar esta línea
-
+    def delete_model(self, request, obj):
+        # Guarda el usuario y motivo antes de eliminar
+        obj._usuario_eliminacion = request.user.username
+        obj._motivo_eliminacion = f"Eliminado por {request.user.username} desde el admin"
+        obj.save()
+        super().delete_model(request, obj)
+        
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
@@ -51,6 +213,9 @@ class EquipoAdmin(ImportExportModelAdmin):  # Cambiar ExportMixin por ImportExpo
         ('Otros', {
             'fields': ('licencia_office', 'descripcion')
         }),
+        ('Proveedor', {
+            'fields': ('folio', 'rfc')
+        })
     )
     date_hierarchy='fecha_de_adquisicion'
 

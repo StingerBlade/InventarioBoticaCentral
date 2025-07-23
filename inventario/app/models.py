@@ -121,6 +121,8 @@ class Equipo(models.Model):
     disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
     licencia_office = models.BooleanField(default=False, verbose_name="Licencia Office")
     version_windows = models.CharField(max_length=50, null=True, blank=True, verbose_name="Versión de Windows")
+    folio = models.CharField(max_length=50, null=True, blank=True, verbose_name="Folio")
+    rfc = models.CharField(max_length=13, null=True, blank=True, verbose_name="RFC del Proveedor")
     class Meta:
         verbose_name = "Equipo"
         verbose_name_plural = "Equipos"
@@ -151,6 +153,90 @@ class TipoMantenimiento(models.Model):
         while actual.padre:
             actual = actual.padre
         return actual.nombre
+
+class EquipoEliminado(models.Model):
+    # Información original del equipo
+    equipo_id_original = models.IntegerField(verbose_name="ID Original del Equipo")
+    nombre = models.CharField(max_length=100, blank=True)
+    fecha_de_adquisicion = models.DateField(null=True, blank=True)
+    fecha_de_alta = models.DateField(null=True, blank=True)
+    marca = models.CharField(max_length=50, null=True, blank=True)
+    modelo = models.CharField(max_length=50, null=True, blank=True)
+    numero_serie = models.CharField(max_length=100, null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True)
+    capacidad_almacenamiento = models.IntegerField(null=True, blank=True)
+    ram = models.IntegerField(null=True, blank=True)
+    procesador = models.CharField(max_length=100, null=True, blank=True)
+    folio = models.CharField(max_length=50, null=True, blank=True)
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+
+    # Relaciones
+    tipo_equipo = models.ForeignKey('TipoEquipo', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Equipo")
+    sucursal = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Sucursal")
+    razon_social = models.ForeignKey('RazonSocial', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Razón Social")
+    tipo_almacenamiento = models.ForeignKey('TipoAlmacenamiento', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Almacenamiento")
+    disponibilidad = models.ForeignKey('Disponibilidad', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Disponibilidad")
+
+    # Campos de texto para mostrar en el admin
+    tipo_equipo_nombre = models.CharField(max_length=100, null=True, blank=True)
+    sucursal_nombre = models.CharField(max_length=100, null=True, blank=True)
+    razon_social_nombre = models.CharField(max_length=100, null=True, blank=True)
+    tipo_almacenamiento_nombre = models.CharField(max_length=100, null=True, blank=True)
+    disponibilidad_nombre = models.CharField(max_length=100, null=True, blank=True)
+
+    # Información de eliminación
+    fecha_eliminacion = models.DateTimeField(default=timezone.now, verbose_name="Fecha de Eliminación")
+    usuario_eliminacion = models.CharField(max_length=100, null=True, blank=True, verbose_name="Usuario que Eliminó")
+    motivo_eliminacion = models.TextField(null=True, blank=True, verbose_name="Motivo de Eliminación")
+
+    # Campo JSON para guardar información adicional
+    datos_completos = models.JSONField(null=True, blank=True, verbose_name="Datos Completos del Equipo")
+
+    class Meta:
+        verbose_name = "Equipo Eliminado"
+        verbose_name_plural = "Equipos Eliminados"
+        ordering = ['-fecha_eliminacion']
+
+    def __str__(self):
+        return f"{self.nombre} - {self.marca} {self.modelo} (Eliminado: {self.fecha_eliminacion.strftime('%d/%m/%Y')})"
+
+    @classmethod
+    def crear_desde_equipo(cls, equipo_instance, usuario=None, motivo=None):
+        """
+        Método para crear un registro de equipo eliminado desde una instancia de Equipo
+        """
+        return cls.objects.create(
+            equipo_id_original=equipo_instance.id,
+            nombre=equipo_instance.nombre,
+            fecha_de_adquisicion=equipo_instance.fecha_de_adquisicion,
+            fecha_de_alta=equipo_instance.fecha_de_alta,
+            marca=equipo_instance.marca,
+            modelo=equipo_instance.modelo,
+            numero_serie=equipo_instance.numero_serie,
+            descripcion=equipo_instance.descripcion,
+            capacidad_almacenamiento=equipo_instance.capacidad_almacenamiento,
+            ram=equipo_instance.ram,
+            procesador=equipo_instance.procesador,
+            folio=equipo_instance.folio,
+            rfc=equipo_instance.rfc,
+            tipo_equipo=equipo_instance.tipo,
+            sucursal=equipo_instance.fk_sucursal,
+            razon_social=equipo_instance.fk_razon_social,
+            tipo_almacenamiento=equipo_instance.tipo_almacenamiento,
+            disponibilidad=equipo_instance.disponibilidad,
+            tipo_equipo_nombre=equipo_instance.tipo.nombre_tipo_equipo if equipo_instance.tipo else None,
+            sucursal_nombre=equipo_instance.fk_sucursal.nombre_suc if equipo_instance.fk_sucursal else None,
+            razon_social_nombre=equipo_instance.fk_razon_social.razon if equipo_instance.fk_razon_social else None,
+            tipo_almacenamiento_nombre=equipo_instance.tipo_almacenamiento.nombre if equipo_instance.tipo_almacenamiento else None,
+            disponibilidad_nombre=equipo_instance.disponibilidad.nombre if equipo_instance.disponibilidad else None,
+            usuario_eliminacion=usuario,
+            motivo_eliminacion=motivo,
+            datos_completos={
+                'licencia_office': getattr(equipo_instance, 'licencia_office', None),
+                'version_windows': getattr(equipo_instance, 'version_windows', None),
+                # Agrega más campos si es necesario
+            }
+        )
 
 class Mantenimiento(models.Model):
     fk_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, verbose_name="Equipo")
