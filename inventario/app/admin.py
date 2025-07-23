@@ -94,7 +94,7 @@ class AsignacionAdmin(ImportExportModelAdmin):
         return custom_urls + urls
 
     def custom_action(self, request):
-        return HttpResponseRedirect('https://www.ejemplo.com')
+        return HttpResponseRedirect('https://responsivas.vercel.app')
     
 @admin.register(Municipio)
 class MunicipioAdmin(admin.ModelAdmin):
