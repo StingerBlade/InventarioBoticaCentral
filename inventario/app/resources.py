@@ -5,6 +5,7 @@ from .models import (
     Equipo, TipoEquipo, TipoAlmacenamiento, Disponibilidad,
     Sucursal, RazonSocial, Asignacion, Empleado
 )
+
 class AsignacionResource(resources.ModelResource):
     # Campos personalizados para mostrar nombres en lugar de IDs
     empleado_nombre = fields.Field(
@@ -110,6 +111,17 @@ class EquipoResource(resources.ModelResource):
         widget=BooleanWidget()
     )
 
+    # NUEVOS CAMPOS AGREGADOS: folio y rfc
+    folio = fields.Field(
+        column_name='folio',
+        attribute='folio'
+    )
+
+    rfc = fields.Field(
+        column_name='rfc',
+        attribute='rfc'
+    )
+
     class Meta:
         model = Equipo
         fields = (
@@ -124,6 +136,8 @@ class EquipoResource(resources.ModelResource):
             # Especificaciones técnicas
             'capacidad_almacenamiento', 'ram', 'procesador',
             'version_windows', 'licencia_office',
+            # Datos Proveedor (NUEVOS CAMPOS)
+            'folio', 'rfc',
             # Campos opcionales
             'nombre', 'descripcion'
         )
@@ -149,12 +163,12 @@ class EquipoResource(resources.ModelResource):
             elif value == '':
                 row[key] = None
 
-        # Campos que pueden estar vacíos
+        # Campos que pueden estar vacíos (INCLUIR folio y rfc)
         empty_to_none_fields = [
             'marca', 'modelo', 'numero_serie', 'descripcion',
             'capacidad_almacenamiento', 'ram', 'procesador',
             'version_windows', 'fecha_adquisicion', 'fk_sucursal',
-            'fk_razon_social', 'tipo_almacenamiento'
+            'fk_razon_social', 'tipo_almacenamiento', 'folio', 'rfc'
         ]
 
         for field in empty_to_none_fields:
@@ -164,6 +178,8 @@ class EquipoResource(resources.ModelResource):
         # Debug: mostrar valores después del procesamiento
         print(f"Sucursal procesada: '{row.get('fk_sucursal')}'")
         print(f"Razón Social procesada: '{row.get('fk_razon_social')}'")
+        print(f"Folio procesado: '{row.get('folio')}'")
+        print(f"RFC procesado: '{row.get('rfc')}'")
         print("=== FIN PROCESAMIENTO FILA ===\n")
 
     def import_obj(self, obj, data, dry_run):
@@ -174,6 +190,8 @@ class EquipoResource(resources.ModelResource):
         print(f"Datos recibidos para FKs:")
         print(f"  fk_sucursal: {data.get('fk_sucursal')}")
         print(f"  fk_razon_social: {data.get('fk_razon_social')}")
+        print(f"  folio: {data.get('folio')}")
+        print(f"  rfc: {data.get('rfc')}")
 
         # Verificar si los objetos relacionados existen
         if data.get('fk_sucursal'):
