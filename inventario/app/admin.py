@@ -1,5 +1,6 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportModelAdmin, ExportMixin
+
 from .resources import EquipoResource  # Importar el resource que creamos
 from django.urls import reverse
 from django.utils.html import format_html
@@ -74,7 +75,7 @@ class PrestamoAdmin(admin.ModelAdmin):
     list_filter = ('fk_equipo__tipo',  'fk_equipo__fk_sucursal')
 
 @admin.register(Asignacion)
-class AsignacionAdmin(ImportExportModelAdmin):
+class AsignacionAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = AsignacionResource  # Agregar esta línea
     
     list_display = ('fk_equipo', 'fk_empleado', 'fecha_asignacion', 'fecha_devolucion')

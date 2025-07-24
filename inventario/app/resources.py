@@ -228,6 +228,21 @@ class EquipoResource(resources.ModelResource):
 
         return super().import_obj(obj, data, dry_run)
 
+
+    def before_save_instance(self, *args, **kwargs):
+        instance = args[0]  # Primer argumento siempre es la instancia
+
+        try:
+            disponible = Disponibilidad.objects.get(nombre='Disponible')
+            instance.disponibilidad = disponible
+            print(f"✓ Disponibilidad asignada desde before_save_instance: {disponible}")
+        except Disponibilidad.DoesNotExist:
+            print("⚠️ Disponibilidad 'Disponible' no encontrada")
+
+
+
+
+
     def after_import_row(self, row, row_result, **kwargs):
         """Procesar después de importar cada fila (para debug)"""
         if row_result.errors:
