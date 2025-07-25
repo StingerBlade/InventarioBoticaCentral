@@ -11,7 +11,8 @@ from .models import (
     Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
 )
 from .inlines import MantenimientoInline, AsignacionInline, PrestamoInline
-from .resources import AsignacionResource
+from .resources import AsignacionResource, EmpleadoResource
+
 admin.site.site_header = "Inventario - BOTICA CENTRAL"
 admin.site.site_title = "Panel de Administración"
 admin.site.index_title = "Bienvenido al Sistema de Inventario"
@@ -20,7 +21,8 @@ admin.site.index_title = "Bienvenido al Sistema de Inventario"
 
 
 @admin.register(Empleado)
-class EmpleadoAdmin(admin.ModelAdmin):
+class EmpleadoAdmin(ImportExportModelAdmin):
+    resource_class = EmpleadoResource
     list_display = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento', 'fk_sucursal')
     search_fields = ('nombre_empleado', 'correo', 'puesto', 'fk_departamento__nombre')
     list_filter = ('fk_departamento', 'fk_sucursal')
@@ -31,8 +33,8 @@ class EmpleadoAdmin(admin.ModelAdmin):
 
 # CLASE ACTUALIZADA CON IMPORT/EXPORT
 @admin.register(Equipo)
-class EquipoAdmin(ImportExportModelAdmin):  # Cambiar ExportMixin por ImportExportModelAdmin
-    resource_class = EquipoResource  # Agregar esta línea
+class EquipoAdmin(ImportExportModelAdmin):
+    resource_class = EquipoResource  
 
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')

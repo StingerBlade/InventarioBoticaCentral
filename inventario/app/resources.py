@@ -3,7 +3,7 @@ from import_export.widgets import ForeignKeyWidget, BooleanWidget, DateWidget
 from datetime import datetime
 from .models import (
     Equipo, TipoEquipo, TipoAlmacenamiento, Disponibilidad,
-    Sucursal, RazonSocial, Asignacion, Empleado
+    Sucursal, RazonSocial, Asignacion, Empleado, Departamento
 )
 
 class AsignacionResource(resources.ModelResource):
@@ -249,3 +249,136 @@ class EquipoResource(resources.ModelResource):
             print(f"Errores en fila: {row_result.errors}")
         if hasattr(row_result, 'object_repr'):
             print(f"Objeto procesado: {row_result.object_repr}")
+
+
+
+class EmpleadoResource(resources.ModelResource):
+    # ForeignKey fields con nombres descriptivos
+
+    nombre_empleado = fields.Field(
+        column_name='nombre_empleado',
+        attribute='nombre_empleado'
+    )
+
+    correo = fields.Field(
+        column_name='correo',
+        attribute='correo'
+    )
+
+
+    fk_departamento = fields.Field(
+        column_name='fk_departamento',
+        attribute='fk_departamento',
+        widget=ForeignKeyWidget(Departamento, 'nombre')
+    )
+    
+    fk_sucursal = fields.Field(
+        column_name='fk_sucursal',
+        attribute='fk_sucursal',
+        widget=ForeignKeyWidget(Sucursal, 'nombre_suc')
+    )
+    
+    class Meta:
+        model = Empleado
+        fields = (
+            'id',
+            'nombre_empleado',
+            'correo',
+            'fk_sucursal',
+            'fk_departamento',
+            'puesto',
+            )
+        export_order = (
+            'id',
+            'nombre_empleado',
+            'correo',
+            'fk_sucursal',
+            'fk_departamento',
+            'puesto',
+        )
+        # Usar correo como identificador único para importaciones
+        import_id_fields = ('correo',)
+        skip_unchanged = True
+        report_skipped = True
+        use_transactions = True
+
+    def before_import_row(self, row, **kwargs):
+        """Procesar datos antes de importar cada fila"""
+        print(f"\n=== PROCESANDO EMPLEADO ===")
+        print(f"Empleado: '{row.get('nombre_empleado')}'")
+        print(f"Correo: '{row.get('correo')}'")
+        print(f"Departamento: '{row.get('fk_departamento')}' (tipo: {type(row.get('fk_departamento'))})")
+        print(f"Sucursal: '{row.get('fk_sucursal')}' (tipo: {type(row.get('fk_sucursal'))})")
+
+        # Limpiar espacios en blanco y valores vacíos
+        for key, value in row.items():
+            if isinstance(value, str):
+                cleaned_value = value.strip()
+                row[key] = cleaned_value if cleaned_value else None
+            elif value == '':
+                row[key] = None
+
+        # Campos que pueden estar vacíos
+        empty_to_none_fields = [
+            'nombre_empleado', 'correo', 'fk_sucursal', 'fk_departamento', 'puesto'
+        ]
+
+        for field in empty_to_none_fields:
+            if row.get(field) in ['', None, 'NULL', 'null', 'N/A', 'n/a']:
+                row[field] = None
+
+        # Validación básica de correo
+        correo = row.get('correo')
+        if correo and '@' not in correo:
+            print(f"⚠️ ADVERTENCIA: El correo '{correo}' no parece válido")
+
+        print(f"Departamento procesado: '{row.get('fk_departamento')}'")
+        print(f"Sucursal procesada: '{row.get('fk_sucursal')}'")
+        print("=== FIN PROCESAMIENTO EMPLEADO ===\n")
+
+    def import_obj(self, obj, data, dry_run):
+        """Procesar el objeto antes de guardarlo"""
+        print(f"\n--- IMPORT_OBJ EMPLEADO DEBUG ---")
+        print(f"Datos recibidos:")
+        print(f"  nombre_empleado: {data.get('nombre_empleado')}")
+        print(f"  correo: {data.get('correo')}")
+        print(f"  puesto: {data.get('puesto')}")
+        print(f"  departamento: {data.get('fk_departamento')}")
+        print(f"  sucursal: {data.get('fk_sucursal')}")
+
+        # Verificar si los objetos relacionados existen
+        if data.get('fk_departamento'):
+            try:
+                departamento = Departamento.objects.get(nombre=data.get('departamento'))
+                print(f"  ✓ Departamento encontrado: {departamento}")
+            except Departamento.DoesNotExist:
+                print(f"  ✗ Departamento NO encontrado: {data.get('departamento')}")
+                print(f"  Departamentos disponibles: {list(Departamento.objects.values_list('nombre', flat=True))}")
+
+        if data.get('sucursal'):
+            try:
+                sucursal = Sucursal.objects.get(nombre_suc=data.get('sucursal'))
+                print(f"  ✓ Sucursal encontrada: {sucursal}")
+            except Sucursal.DoesNotExist:
+                print(f"  ✗ Sucursal NO encontrada: {data.get('sucursal')}")
+                print(f"  Sucursales disponibles: {list(Sucursal.objects.values_list('nombre_suc', flat=True))}")
+
+        print("--- FIN IMPORT_OBJ EMPLEADO DEBUG ---\n")
+
+        return super().import_obj(obj, data, dry_run)
+
+    def after_import_row(self, row, row_result, **kwargs):
+        """Procesar después de importar cada fila (para debug)"""
+        if row_result.errors:
+            print(f"Errores en fila empleado: {row_result.errors}")
+        if hasattr(row_result, 'object_repr'):
+            print(f"Empleado procesado: {row_result.object_repr}")
+
+    def skip_row(self, instance, original, row, import_validation_errors=None):
+        """Decidir si saltar una fila durante la importación"""
+        # Saltar si no hay nombre o correo
+        if not row.get('nombre_empleado') or not row.get('correo'):
+            print(f"⚠️ Saltando fila: falta nombre_empleado o correo")
+            return True
+        
+        return super().skip_row(instance, original, row, import_validation_errors)
