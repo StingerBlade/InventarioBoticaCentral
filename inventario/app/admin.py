@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from .models import (
     Estado, Municipio, Sucursal, Departamento, RazonSocial, TipoEquipo,
     TipoAlmacenamiento, Disponibilidad, Empleado, Equipo, Mantenimiento,
-    Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion
+    Prestamo, DispositivoMovil, Tipo_Sucursal, Asignacion,  isp, conexiones
 )
 from .inlines import MantenimientoInline, AsignacionInline, PrestamoInline
 from .resources import AsignacionResource, EmpleadoResource
@@ -38,7 +38,7 @@ class EquipoAdmin(ImportExportModelAdmin):
 
     list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
-    list_filter = ('disponibilidad', 'tipo', 'fk_sucursal')
+    list_filter = ('nuevo','disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
     inlines = [MantenimientoInline]
     fieldsets = (
@@ -55,7 +55,7 @@ class EquipoAdmin(ImportExportModelAdmin):
             'fields':('rfc', 'folio')
         }),
         ('Otros', {
-            'fields': ('licencia_office', 'descripcion')
+            'fields': ('licencia_office', 'descripcion', 'nuevo')
         }),
 
     )
@@ -140,3 +140,5 @@ admin.site.register(TipoEquipo)
 admin.site.register(TipoAlmacenamiento)
 admin.site.register(Disponibilidad)
 admin.site.register(DispositivoMovil)
+admin.site.register(isp)
+admin.site.register(conexiones)

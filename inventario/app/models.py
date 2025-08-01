@@ -35,17 +35,44 @@ class RazonSocial(models.Model):
     def __str__(self):
         return self.razon
 
+class isp(models.Model):
+    nombre_isp = models.CharField(max_length=50)
+
+    class Meta:
+            verbose_name = "Proveedor"
+            verbose_name_plural = "Proveedor"
+    
+    def __str__(self):
+        return self.nombre_isp
+class conexiones (models.Model):
+    conexion = models.CharField(max_length=50)
+
+    class Meta:
+            verbose_name = "Conexion"
+            verbose_name_plural = "Tipos de Conexion"
+    
+    def __str__(self):
+        return self.conexion
+
+
 class Sucursal(models.Model):
     nombre_suc = models.CharField(max_length=100)
     fk_municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE, verbose_name="Municipio")
     fk_tipo_sucursal = models.ForeignKey('Tipo_Sucursal', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Sucursal")
     fk_razon_social = models.ForeignKey(RazonSocial, on_delete=models.SET_NULL, null=True, verbose_name="Razón Social")
+    nombre_isp = models.ForeignKey(isp, on_delete=models.SET_NULL,verbose_name="Proveedor", null=True)
+    password = models.CharField(max_length=50, null=True, verbose_name="Contrasena")
+    conexion = models.ForeignKey(conexiones, on_delete=models.SET_NULL,verbose_name="Tipo de Conexion", null=True)
+    cuenta = models.CharField(max_length=50, null=True, verbose_name="Cuenta")
+
     class Meta:
         verbose_name = "Sucursal"
         verbose_name_plural = "Sucursales"
 
     def __str__(self):
         return self.nombre_suc
+
+
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=100)
@@ -120,6 +147,7 @@ class Equipo(models.Model):
     procesador = models.CharField(max_length=100, null=True, blank=True)
     disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.SET_NULL, null=True)
     licencia_office = models.BooleanField(default=False, verbose_name="Licencia Office")
+    nuevo = models.BooleanField(default=False, verbose_name="nuevo")
     version_windows = models.CharField(max_length=50, null=True, blank=True, verbose_name="Versión de Windows")
     folio = models.CharField(max_length=50, null=True, blank=True, verbose_name="Folio")
     rfc = models.CharField(max_length=13, null=True, blank=True, verbose_name="RFC")
