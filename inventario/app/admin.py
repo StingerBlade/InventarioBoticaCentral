@@ -36,7 +36,7 @@ class EmpleadoAdmin(ImportExportModelAdmin):
 class EquipoAdmin(ImportExportModelAdmin):
     resource_class = EquipoResource  
 
-    list_display = ('nombre', 'tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
+    list_display = ('nombre', 'nuevo','tipo', 'marca', 'modelo', 'fk_sucursal', 'disponibilidad', 'fecha_de_alta', 'fecha_de_adquisicion')
     search_fields = ('nombre', 'marca', 'modelo', 'numero_serie')
     list_filter = ('nuevo','disponibilidad', 'tipo', 'fk_sucursal')
     ordering = ('nombre',)
